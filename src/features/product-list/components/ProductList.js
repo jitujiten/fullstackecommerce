@@ -1,9 +1,13 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { increment, incrementAsync, selectCount } from "../ProductSlice";
+import { fetchAllProductAsync, selectAllProducts } from "../ProductSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  StarIcon,
+} from "@heroicons/react/20/solid";
 import {
   ChevronDownIcon,
   FunnelIcon,
@@ -20,41 +24,127 @@ const sortOptions = [
   { name: "Price: High to Low", href: "#", current: false },
 ];
 
+const brandData = [
+  "Apple",
+  "Samsung",
+  "OPPO",
+  "Huawei",
+  "Microsoft Surface",
+  "Infinix",
+  "HP Pavilion",
+  "Impression of Acqua Di Gio",
+  "Royal_Mirage",
+  "Fog Scent Xpressio",
+  "Al Munakh",
+  "Lord - Al-Rehab",
+  "L'Oreal Paris",
+  "Hemani Tea",
+  "Dermive",
+  "ROREC White Rice",
+  "Fair & Clear",
+  "Saaf & Khaas",
+  "Bake Parlor Big",
+  "Baking Food Items",
+  "fauji",
+  "Dry Rose",
+  "Boho Decor",
+  "Flying Wooden",
+  "LED Lights",
+  "luxury palace",
+  "Golden",
+  "Furniture Bed Set",
+  "Ratttan Outdoor",
+  "Kitchen Shelf",
+  "Multi Purpose",
+  "AmnaMart",
+  "Professional Wear",
+  "Soft Cotton",
+  "Top Sweater",
+  "RED MICKY MOUSE..",
+  "Digital Printed",
+  "Ghazi Fabric",
+  "IELGY",
+  "IELGY fashion",
+  "Synthetic Leather",
+  "Sandals Flip Flops",
+  "Maasai Sandals",
+  "Arrivals Genuine",
+  "Vintage Apparel",
+  "FREE FIRE",
+  "The Warehouse",
+  "Sneakers",
+  "Rubber",
+  "Naviforce",
+  "SKMEI 9117",
+  "Strap Skeleton",
+  "Stainless",
+  "Eastern Watches",
+  "Luxury Digital",
+  "Watch Pearls",
+  "Bracelet",
+  "LouisWill",
+  "Copenhagen Luxe",
+  "Steal Frame",
+  "Darojay",
+  "Fashion Jewellery",
+  "Cuff Butterfly",
+  "Designer Sun Glasses",
+  "mastar watch",
+  "Car Aux",
+  "W1209 DC12V",
+  "TC Reusable",
+  "Neon LED Light",
+  "METRO 70cc Motorcycle - MR70",
+  "BRAVE BULL",
+  "shock absorber",
+  "JIEPOLLY",
+  "Xiangle",
+  "lightingbrilliance",
+  "Ifei Home",
+  "DADAWU",
+  "YIOSI",
+];
+
+const categorydata = [
+  "smartphones",
+  "laptops",
+  "fragrances",
+  "skincare",
+  "groceries",
+  "home-decoration",
+  "furniture",
+  "tops",
+  "womens-dresses",
+  "womens-shoes",
+  "mens-shirts",
+  "mens-shoes",
+  "mens-watches",
+  "womens-watches",
+  "womens-bags",
+  "womens-jewellery",
+  "sunglasses",
+  "automotive",
+  "motorcycle",
+  "lighting",
+];
 const filters = [
-  {
-    id: "color",
-    name: "Color",
-    options: [
-      { value: "white", label: "White", checked: false },
-      { value: "beige", label: "Beige", checked: false },
-      { value: "blue", label: "Blue", checked: true },
-      { value: "brown", label: "Brown", checked: false },
-      { value: "green", label: "Green", checked: false },
-      { value: "purple", label: "Purple", checked: false },
-    ],
-  },
   {
     id: "category",
     name: "Category",
-    options: [
-      { value: "new-arrivals", label: "New Arrivals", checked: false },
-      { value: "sale", label: "Sale", checked: false },
-      { value: "travel", label: "Travel", checked: true },
-      { value: "organization", label: "Organization", checked: false },
-      { value: "accessories", label: "Accessories", checked: false },
-    ],
+    options: categorydata.map((name, index) => ({
+      value: `category_${index + 1}`,
+      label: name,
+      checked: false,
+    })),
   },
   {
-    id: "size",
-    name: "Size",
-    options: [
-      { value: "2l", label: "2L", checked: false },
-      { value: "6l", label: "6L", checked: false },
-      { value: "12l", label: "12L", checked: false },
-      { value: "18l", label: "18L", checked: false },
-      { value: "20l", label: "20L", checked: false },
-      { value: "40l", label: "40L", checked: true },
-    ],
+    id: "brand",
+    name: "Brand",
+    options: brandData.map((name, index) => ({
+      value: `brand_${index + 1}`,
+      label: name,
+      checked: false,
+    })),
   },
 ];
 
@@ -62,54 +152,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 2,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 3,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 4,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  // More products...
-];
-
 export default function ProductList() {
-  const count = useSelector(selectCount);
   const dispatch = useDispatch();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const products = useSelector(selectAllProducts);
+
+  useEffect(() => {
+    dispatch(fetchAllProductAsync());
+  }, [dispatch]);
 
   return (
     <div>
@@ -375,35 +425,52 @@ export default function ProductList() {
                       <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
                         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                           {products.map((product) => (
-                            <Link to="product-detail" key={product.id}>
-                            <div  className="group relative">
-                              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                                <img
-                                  src={product.imageSrc}
-                                  alt={product.imageAlt}
-                                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                                />
-                              </div>
-                              <div className="mt-4 flex justify-between">
-                                <div>
-                                  <h3 className="text-sm text-gray-700">
-                                    <a href={product.href}>
-                                      <span
-                                        aria-hidden="true"
-                                        className="absolute inset-0"
-                                      />
-                                      {product.name}
-                                    </a>
-                                  </h3>
-                                  <p className="mt-1 text-sm text-gray-500">
-                                    {product.color}
-                                  </p>
+                            <Link to="product-detail">
+                              <div
+                                key={product.id}
+                                className="group relative p-2 border-solid border-2 border-gray-200 rounded-lg"
+                              >
+                                <div className="h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
+                                  <img
+                                    src={product.thumbnail}
+                                    alt={product.title}
+                                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                                  />
                                 </div>
-                                <p className="text-sm font-medium text-gray-900">
-                                  {product.price}
-                                </p>
+                                <div className="mt-4 flex justify-between">
+                                  <div>
+                                    <h3 className="text-sm  text-gray-900">
+                                      <a href={product.thumbnail}>
+                                        <span
+                                          aria-hidden="true"
+                                          className="absolute inset-0"
+                                        />
+                                        {product.title}
+                                      </a>
+                                    </h3>
+                                    <p className="mt-2 text-sm flex items-start	gap-1 text-gray-500">
+                                      <StarIcon className="w-6 h-6 inline" />
+                                      <span className=" mt-1">
+                                        {product.rating}
+                                      </span>
+                                    </p>
+                                  </div>
+                                  <div className=" flex flex-col">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      $
+                                      {(
+                                        product.price -
+                                        (product.price *
+                                          product.discountPercentage) /
+                                          100
+                                      ).toFixed(0)}
+                                    </p>
+                                    <p className="text-sm font-medium text-gray-400 line-through">
+                                      ${product.price}
+                                    </p>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
                             </Link>
                           ))}
                         </div>
