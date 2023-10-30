@@ -5,6 +5,10 @@ import {
   selectAllProducts,
   selecttotalItems,
   fetchProductsByFilterAsync,
+  fetchAllBrandsAsync,
+  fetchAllCategoryAsync,
+  selectBrands,
+  selectCategory,
 } from "../ProductSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -29,130 +33,6 @@ const sortOptions = [
   { name: "Price: High to Low", sort: "price", order: "desc", current: false },
 ];
 
-const brandData = [
-  "Apple",
-  "Samsung",
-  "OPPO",
-  "Huawei",
-  "Microsoft Surface",
-  "Infinix",
-  "HP Pavilion",
-  "Impression of Acqua Di Gio",
-  "Royal_Mirage",
-  "Fog Scent Xpressio",
-  "Al Munakh",
-  "Lord - Al-Rehab",
-  "L'Oreal Paris",
-  "Hemani Tea",
-  "Dermive",
-  "ROREC White Rice",
-  "Fair & Clear",
-  "Saaf & Khaas",
-  "Bake Parlor Big",
-  "Baking Food Items",
-  "fauji",
-  "Dry Rose",
-  "Boho Decor",
-  "Flying Wooden",
-  "LED Lights",
-  "luxury palace",
-  "Golden",
-  "Furniture Bed Set",
-  "Ratttan Outdoor",
-  "Kitchen Shelf",
-  "Multi Purpose",
-  "AmnaMart",
-  "Professional Wear",
-  "Soft Cotton",
-  "Top Sweater",
-  "RED MICKY MOUSE..",
-  "Digital Printed",
-  "Ghazi Fabric",
-  "IELGY",
-  "IELGY fashion",
-  "Synthetic Leather",
-  "Sandals Flip Flops",
-  "Maasai Sandals",
-  "Arrivals Genuine",
-  "Vintage Apparel",
-  "FREE FIRE",
-  "The Warehouse",
-  "Sneakers",
-  "Rubber",
-  "Naviforce",
-  "SKMEI 9117",
-  "Strap Skeleton",
-  "Stainless",
-  "Eastern Watches",
-  "Luxury Digital",
-  "Watch Pearls",
-  "Bracelet",
-  "LouisWill",
-  "Copenhagen Luxe",
-  "Steal Frame",
-  "Darojay",
-  "Fashion Jewellery",
-  "Cuff Butterfly",
-  "Designer Sun Glasses",
-  "mastar watch",
-  "Car Aux",
-  "W1209 DC12V",
-  "TC Reusable",
-  "Neon LED Light",
-  "METRO 70cc Motorcycle - MR70",
-  "BRAVE BULL",
-  "shock absorber",
-  "JIEPOLLY",
-  "Xiangle",
-  "lightingbrilliance",
-  "Ifei Home",
-  "DADAWU",
-  "YIOSI",
-];
-
-const categorydata = [
-  "smartphones",
-  "laptops",
-  "fragrances",
-  "skincare",
-  "groceries",
-  "home-decoration",
-  "furniture",
-  "tops",
-  "womens-dresses",
-  "womens-shoes",
-  "mens-shirts",
-  "mens-shoes",
-  "mens-watches",
-  "womens-watches",
-  "womens-bags",
-  "womens-jewellery",
-  "sunglasses",
-  "automotive",
-  "motorcycle",
-  "lighting",
-];
-const filters = [
-  {
-    id: "category",
-    name: "category",
-    options: categorydata.map((name) => ({
-      value: name,
-      label: name,
-      checked: false,
-    })),
-  },
-  {
-    id: "brand",
-    name: "brand",
-    options: brandData.map((name) => ({
-      value: name,
-      label: name,
-      checked: false,
-    })),
-  },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -160,11 +40,26 @@ function classNames(...classes) {
 export default function ProductList() {
   const dispatch = useDispatch();
   const products = useSelector(selectAllProducts);
+  const brandData = useSelector(selectBrands);
+  const categorydata = useSelector(selectCategory);
   const totalItems = useSelector(selecttotalItems);
   const [sort, setSort] = useState({});
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const filters = [
+    {
+      id: "category",
+      name: "category",
+      options: categorydata,
+    },
+    {
+      id: "brand",
+      name: "brand",
+      options: brandData,
+    },
+  ];
 
   const handleFilter = (e, section) => {
     const { value } = e.target;
@@ -201,6 +96,11 @@ export default function ProductList() {
     setPage(1);
   }, [totalItems, sort]);
 
+  useEffect(() => {
+    dispatch(fetchAllBrandsAsync());
+    dispatch(fetchAllCategoryAsync());
+  }, []);
+
   return (
     <div className="bg-white">
       <div>
@@ -208,6 +108,7 @@ export default function ProductList() {
           handleFilter={handleFilter}
           mobileFiltersOpen={mobileFiltersOpen}
           setMobileFiltersOpen={setMobileFiltersOpen}
+          filters={filters}
         />
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
@@ -286,7 +187,7 @@ export default function ProductList() {
 
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Filters */}
-              <DesktopFilter handleFilter={handleFilter} />
+              <DesktopFilter handleFilter={handleFilter} filters={filters} />
 
               {/* Product grid */}
               <div className="lg:col-span-3">
@@ -311,6 +212,7 @@ const MobileFilter = ({
   mobileFiltersOpen,
   setMobileFiltersOpen,
   handleFilter,
+  filters,
 }) => {
   return (
     <div>
@@ -427,7 +329,7 @@ const MobileFilter = ({
   );
 };
 
-const DesktopFilter = ({ handleFilter }) => {
+const DesktopFilter = ({ handleFilter, filters }) => {
   return (
     <form className="hidden lg:block">
       {filters.map((section) => (
@@ -576,7 +478,7 @@ const ProductGrid = ({ products }) => {
       <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
           {products?.map((product) => (
-            <Link key={product.id} to="product-detail">
+            <Link key={product.id} to={`product-detail/${product.id}`}>
               <div
                 key={product.id}
                 className="group relative p-2 border-solid border-2 border-gray-200 rounded-lg"
