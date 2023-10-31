@@ -4,6 +4,9 @@ import { RadioGroup } from "@headlessui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectedProduct, fetchProductByIdAsync } from "../ProductSlice";
 import { useParams } from "react-router-dom";
+import {selectLoggedinUser} from "../../auth/authSlice";
+import { addToCartAsync } from "../../cart/cartSlice";
+
 // const product = {
 //   name: "Basic Tee 6-Pack",
 //   price: "$192",
@@ -81,6 +84,9 @@ const highlights = [
   "Ultra-soft 100% cotton",
 ];
 
+
+
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -91,10 +97,18 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const product = useSelector(selectedProduct);
   const params = useParams();
+  const user=useSelector(selectLoggedinUser)
 
   useEffect(() => {
     dispatch(fetchProductByIdAsync(params.id));
   }, [dispatch, params.id]);
+
+  
+const handleCart=(e)=>{
+  e.preventDefault()
+ dispatch(addToCartAsync({...product,quantity:1,user:user.id})) 
+}
+
 
   return (
     <div className="bg-white">
@@ -348,6 +362,7 @@ export default function ProductDetail() {
                 <button
                   type="submit"
                   className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={handleCart}
                 >
                   Add to Cart
                 </button>
