@@ -13,14 +13,17 @@ import {
   selectLoggedinUser,
   updateUserAsync,
 } from "../features/auth/authSlice";
-import { addOrderAsync } from "../features/order/orderSlice";
+import {
+  addOrderAsync,
+  selectcurrentOrderPlaced,
+} from "../features/order/orderSlice";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
   const [selectAddress, setselectAddress] = useState(null);
   const [payMentMethod, setPayMentMethod] = useState("cash");
-
+  const orderPlaced = useSelector(selectcurrentOrderPlaced);
   const products = useSelector(selectItems);
   const user = useSelector(selectLoggedinUser);
   const {
@@ -62,17 +65,22 @@ const CheckoutPage = () => {
       user: user,
       payMentMethod: payMentMethod,
       selectAddress: selectAddress,
+      status: "pending",
     };
     if (selectAddress) {
       dispatch(addOrderAsync(order));
-    }else{
-      console.log("select one address")
     }
   };
 
   return (
     <>
       {!products.length && <Navigate to="/" replace={true}></Navigate>}
+      {orderPlaced?.id && (
+        <Navigate
+          to={`/order-success/${orderPlaced.id}`}
+          replace={true}
+        ></Navigate>
+      )}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
           <div className="lg:col-span-3">
