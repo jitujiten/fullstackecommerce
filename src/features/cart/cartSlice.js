@@ -83,7 +83,7 @@ export const cartSlice = createSlice({
         const index = state.items.findIndex(
           (item) => item.id === action.payload.id
         );
-        state.items.splice(index,1) 
+        state.items.splice(index, 1);
       })
       .addCase(fetchItemsByUserIdAsync.pending, (state) => {
         state.status = "loading";
