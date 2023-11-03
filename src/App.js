@@ -21,6 +21,9 @@ import PageNotFound from "./pages/404";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import UserOrderPage from "./pages/UserOrderPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import { fetchLoggedInUser } from "./features/user/userAPI";
+import { fetchLoggedInUserAsync } from "./features/user/userSlice";
+import Logout from "./features/auth/components/Logout";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +91,10 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "logout",
+    element: <Logout />,
+  },
+  {
     path: "*",
     element: <PageNotFound />,
   },
@@ -100,6 +107,7 @@ function App() {
   useEffect(() => {
     if (user) {
       dispatch(fetchItemsByUserIdAsync(user?.id));
+      dispatch(fetchLoggedInUserAsync(user?.id));
     }
   }, [dispatch, user]);
 

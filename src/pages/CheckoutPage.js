@@ -10,13 +10,13 @@ import {
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
 import {
-  selectLoggedinUser,
   updateUserAsync,
 } from "../features/auth/authSlice";
 import {
   addOrderAsync,
   selectcurrentOrderPlaced,
 } from "../features/order/orderSlice";
+import { selectUserInfo } from "../features/user/userSlice";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const CheckoutPage = () => {
   const [payMentMethod, setPayMentMethod] = useState("cash");
   const orderPlaced = useSelector(selectcurrentOrderPlaced);
   const products = useSelector(selectItems);
-  const user = useSelector(selectLoggedinUser);
+  const user = useSelector(selectUserInfo);
   const {
     register,
     handleSubmit,
