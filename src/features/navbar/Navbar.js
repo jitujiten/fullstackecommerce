@@ -86,7 +86,7 @@ export default function Navbar({ children }) {
                           />
                         </button>
                       </Link>
-                      {items.length>0 && (
+                      {items.length > 0 && (
                         <span className="inline-flex items-center rounded-md mb-7 -ml-3 bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 z-10">
                           {items.length}
                         </span>
@@ -136,8 +136,26 @@ export default function Navbar({ children }) {
                       </Menu>
                     </div>
                   </div>
+
                   <div className="-mr-2 flex md:hidden">
                     {/* Mobile menu button */}
+                    <Link to="/cart">
+                      <button
+                        type="button"
+                        className="relative mt-3 -mr-1 ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                      >
+                        <ShoppingCartIcon
+                          className="h-6 w-6"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </Link>
+                    {items.length > 0 && (
+                      <span className="inline-flex items-center rounded-md mb-7 mr-4 bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 z-10">
+                        {items.length}
+                      </span>
+                    )}
+
                     <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-0.5" />
                       <span className="sr-only">Open main menu</span>
@@ -177,7 +195,7 @@ export default function Navbar({ children }) {
                   ))}
                 </div>
                 <div className="border-t border-gray-700 pb-3 pt-4">
-                  <div className="flex items-center px-5">
+                  <div className="flex justify-center	  px-6">
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
@@ -193,33 +211,14 @@ export default function Navbar({ children }) {
                         {user.email}
                       </div>
                     </div>
-                    <Link to="/cart">
-                      <button
-                        type="button"
-                        className="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                      >
-                        <ShoppingCartIcon
-                          className="h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </Link>
-                    {items.length>0 && (
-                      <span className="inline-flex items-center rounded-md mb-7 -ml-3 bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 z-10">
-                        {items.length}
-                      </span>
-                    )}
                   </div>
                   <div className="mt-3 space-y-1 px-2">
                     {userNavigation.map((item) => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                      >
-                        {item.name}
-                      </Disclosure.Button>
+                      <Link key={item.name} to={`${item.link}`}>
+                        <div className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
+                          {item.name}
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 </div>
