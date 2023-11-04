@@ -76,6 +76,6 @@ export function addProduct(product) {
     });
 
     const data = await response.json();
-    resolve({ data });0
+    resolve({ data });
   });
 }
