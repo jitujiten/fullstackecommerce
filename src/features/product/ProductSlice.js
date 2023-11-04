@@ -4,12 +4,13 @@ import {
   fetchProductsByFilter,
   fetchAllCategory,
   fetchAllBrands,
-  fetchProductById
+  fetchProductById,
+  addProduct,
 } from "./ProductAPI";
 
 const initialState = {
   products: [],
-  SelectedProduct:null,
+  SelectedProduct: null,
   brands: [],
   category: [],
   totalItems: 0,
@@ -61,6 +62,15 @@ export const fetchAllCategoryAsync = createAsyncThunk(
   }
 );
 
+export const addProductAsync = createAsyncThunk(
+  "product/addProduct",
+  async (product) => {
+    const response = await addProduct(product);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+
 export const productSlice = createSlice({
   name: "product",
   initialState,
@@ -107,6 +117,13 @@ export const productSlice = createSlice({
       .addCase(fetchAllCategoryAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.category = action.payload;
+      })
+      .addCase(addProductAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addProductAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.products.push(action.payload);
       });
   },
 });

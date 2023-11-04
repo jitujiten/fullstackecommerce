@@ -42,7 +42,7 @@ export default function UserProfile() {
   };
 
   const addAddressForm = (address) => {
-    if(address){
+    if (address) {
       const newUser = { ...user, addresses: [...user.addresses, address] };
       dispatch(updateUserAsync(newUser));
     }
@@ -56,6 +56,11 @@ export default function UserProfile() {
       <h3 className="text-left ml-3 m-2 text-xl font-bold tracking-tight text-red-400">
         Email address:{user?.email}
       </h3>
+      {user?.role === "admin" && (
+        <h3 className="text-left ml-3 m-2 text-xl font-bold tracking-tight text-blue-400">
+          role:{user?.role}
+        </h3>
+      )}
 
       <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
         <div className="flex justify-start mt-5 mb-6">
