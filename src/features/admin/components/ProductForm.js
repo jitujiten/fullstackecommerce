@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProductAsync, selectBrands, selectCategory } from "../../product/ProductSlice";
+import {
+  EditProductAsync,
+  addProductAsync,
+  clearSelectedProduct,
+  fetchProductByIdAsync,
+  selectBrands,
+  selectCategory,
+  selectedProduct,
+} from "../../product/ProductSlice";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // {
 //     "id": 1,
@@ -28,32 +36,80 @@ const ProductForm = () => {
   const dispatch = useDispatch();
   const brandData = useSelector(selectBrands);
   const categorydata = useSelector(selectCategory);
+  const selectedProductIS = useSelector(selectedProduct);
+  const params = useParams();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
     reset,
   } = useForm();
+
+  useEffect(() => {
+    if (params.id) {
+      dispatch(fetchProductByIdAsync(params.id));
+    }else{
+      dispatch(clearSelectedProduct());
+    }
+  }, [params.id, dispatch, setValue]);
+
+  useEffect(() => {
+    if (selectedProductIS && params.id) {
+      setValue("title", selectedProductIS.title);
+      setValue("description", selectedProductIS.description);
+      setValue("price", selectedProductIS.price);
+      setValue("discountPercentage", selectedProductIS.discountPercentage);
+      setValue("stock", selectedProductIS.stock);
+      setValue("brand", selectedProductIS.brand);
+      setValue("category", selectedProductIS.category);
+      setValue("thumbnail", selectedProductIS.thumbnail);
+      setValue("image1", selectedProductIS.images[0]);
+      setValue("image2", selectedProductIS.images[1]);
+      setValue("image3", selectedProductIS.images[2]);
+      setValue("image4", selectedProductIS.images[3]);
+    }
+  }, [selectedProductIS,params.id, setValue]);
+
 
   return (
     <form
       className="bg-white p-6 rounded-md"
       onSubmit={handleSubmit((data) => {
-        const product = { ...data};
-        product.images=[product.image1,product.image2,product.image3,product.image4]
-        product.rating=0;
-        delete product['image1']
-        delete product['image2']
-        delete product['image3']
-        delete product['image4']
-        dispatch(addProductAsync(product));
+        const product = { ...data };
+        product.images = [
+          product.image1,
+          product.image2,
+          product.image3,
+          product.image4,
+        ];
+        product.rating = 0;
+        product.price = +product.price;
+        product.stock = +product.stock;
+        product.discountPercentage = +product.discountPercentage;
+        delete product["image1"];
+        delete product["image2"];
+        delete product["image3"];
+        delete product["image4"];
+        if (params.id) {
+          dispatch(
+            EditProductAsync({
+              ...product,
+              id: params.id,
+              rating: selectedProductIS.rating || 0,
+            })
+          );
+        } else {
+          dispatch(addProductAsync(product));
+        }
+
         reset();
       })}
     >
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Add Product Form
+            {params.id?`Edit`:`Add`} Product Form
           </h2>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -184,10 +240,11 @@ const ProductForm = () => {
                     {...register("discountPercentage", {
                       required: "Discount Percentage  field is required",
                       min: 1,
-                      max:100
+                      max: 100,
                     })}
                     id="discountPercentage"
                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    step="0.01"
                   />
                 </div>
               </div>

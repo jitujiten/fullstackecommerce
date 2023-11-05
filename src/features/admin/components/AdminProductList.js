@@ -9,6 +9,7 @@ import {
   fetchAllCategoryAsync,
   selectBrands,
   selectCategory,
+  DeleteProductByIdAsync,
 } from "../../product/ProductSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -86,6 +87,14 @@ export default function AdminProductList() {
 
   const handlePage = (page) => {
     setPage(page);
+  };
+
+  const deleteProduct = (id) => {
+    const userConfirmed = window.confirm("Are you sure you want to delete?");
+
+    if (userConfirmed) {
+      dispatch(DeleteProductByIdAsync(id));
+    }
   };
 
   useEffect(() => {
@@ -202,7 +211,10 @@ export default function AdminProductList() {
                   </Link>
                 </div>
                 {/* this is our product list part */}
-                <ProductGrid products={products} />
+                <ProductGrid
+                  products={products}
+                  deleteProduct={deleteProduct}
+                />
               </div>
             </div>
           </section>
@@ -482,7 +494,7 @@ const Pagination = ({ handlePage, page, setPage, totalItems }) => {
   );
 };
 
-const ProductGrid = ({ products }) => {
+const ProductGrid = ({ products, deleteProduct }) => {
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
@@ -526,9 +538,20 @@ const ProductGrid = ({ products }) => {
                   </div>
                 </div>
               </Link>
-              <div className="flex mt-3">
-                <button className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">
+              <div className="flex mt-3 justify-evenly">
+                <Link
+                  to={`/admin/product-form/edit/${product.id}`}
+                  className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                >
                   Edit Product
+                </Link>
+                <button
+                  onClick={() => {
+                    deleteProduct(product.id);
+                  }}
+                  className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                >
+                  Delete Product
                 </button>
               </div>
             </div>

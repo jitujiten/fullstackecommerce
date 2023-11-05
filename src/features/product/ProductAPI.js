@@ -79,3 +79,30 @@ export function addProduct(product) {
     resolve({ data });
   });
 }
+
+export function EditProduct(product) {
+  return new Promise(async (resolve) => {
+    const response = await fetch("http://localhost:8080/products/"+product.id, {
+      method: "PATCH",
+      body: JSON.stringify(product),
+      headers: { "content-type": "application/json" },
+    });
+
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+
+
+
+export function DeleteProductById(id) {
+  return new Promise(async (resolve) => {
+    const response = await fetch("http://localhost:8080/products/" + id, {
+      method: "DELETE",
+      headers: { "content-type": "application/json" },
+    });
+
+    const data = await response.json();
+    resolve({ data: { id: id } });
+  });
+}
