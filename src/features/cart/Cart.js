@@ -1,52 +1,22 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteCartItemAsync,
-  increment,
-  incrementAsync,
-  selectCount,
   selectItems,
   updateCartAsync,
 } from "./cartSlice";
-import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Link, Navigate } from "react-router-dom";
 
-// const products = [
-//   {
-//     id: 1,
-//     name: "Throwback Hip Bag",
-//     href: "#",
-//     color: "Salmon",
-//     price: "$90.00",
-//     quantity: 1,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-//     imageAlt:
-//       "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-//   },
-//   {
-//     id: 2,
-//     name: "Medium Stuff Satchel",
-//     href: "#",
-//     color: "Blue",
-//     price: "$32.00",
-//     quantity: 1,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-//     imageAlt:
-//       "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-//   },
-//   // More products...
-// ];
+import { Link, Navigate } from "react-router-dom";
+import { DiscountPrice } from "../../app/constants";
+
 
 export default function Cart() {
-  // const count = useSelector(selectCount);
+  
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
   const products = useSelector(selectItems);
   const TotalAmount = products.reduce((ammount, item) => {
-    return item.price * item.quantity + ammount;
+    return DiscountPrice(item) * item.quantity + ammount;
   }, 0);
   const TotalItems = products.reduce((total, item) => {
     return item.quantity + total;
@@ -62,7 +32,7 @@ export default function Cart() {
 
   return (
     <>
-     {!products.length  && <Navigate to="/" replace={true}></Navigate>}
+      {!products.length && <Navigate to="/" replace={true}></Navigate>}
       <div className="mx-auto rounded-b-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold tracking-tight text-gray-900">
           Cart
@@ -89,7 +59,7 @@ export default function Cart() {
                             {product.brand}
                           </p>
                         </h3>
-                        <p className="ml-4">{product.price}</p>
+                        <p className="ml-4">${DiscountPrice(product)}</p>
                       </div>
                     </div>
                     <div className="flex flex-1 items-end justify-between text-sm">

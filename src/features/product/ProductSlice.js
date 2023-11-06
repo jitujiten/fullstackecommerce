@@ -7,7 +7,6 @@ import {
   fetchProductById,
   addProduct,
   EditProduct,
-  DeleteProductById,
 } from "./ProductAPI";
 
 const initialState = {
@@ -82,15 +81,6 @@ export const EditProductAsync = createAsyncThunk(
   }
 );
 
-export const DeleteProductByIdAsync = createAsyncThunk(
-  "product/DeleteProductById",
-  async (id) => {
-    const response = await DeleteProductById(id);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
-  }
-);
-
 export const productSlice = createSlice({
   name: "product",
   initialState,
@@ -154,16 +144,6 @@ export const productSlice = createSlice({
           (item) => item.id === action.payload.id
         );
         state.products[index] = action.payload;
-      })
-      .addCase(DeleteProductByIdAsync.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(DeleteProductByIdAsync.fulfilled, (state, action) => {
-        state.status = "idle";
-        const index = state.products.findIndex(
-          (item) => item.id === action.payload
-        );
-        state.products.splice(index, 1);
       });
   },
 });

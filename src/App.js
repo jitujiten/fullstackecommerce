@@ -29,6 +29,7 @@ import ProtectedAdmin from "./features/auth/components/ProtectedAdmin";
 import AdminHome from "./pages/AdminHome";
 import AdminProductDetailsPage from "./pages/AdminProductDetailsPage";
 import AdminProductFormPage from "./pages/AdminProductFormPage";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
 
 const router = createBrowserRouter([
   {
@@ -48,15 +49,15 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "login",
+    path: "/login",
     element: <LoginPage />,
   },
   {
-    path: "signup",
+    path: "/signup",
     element: <SignupPage />,
   },
   {
-    path: "cart",
+    path: "/cart",
     element: (
       <Protected>
         <CartPage />
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "checkout",
+    path: "/checkout",
     element: (
       <Protected>
         <CheckoutPage />
@@ -72,7 +73,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "product-detail/:id",
+    path: "/product-detail/:id",
     element: (
       <Protected>
         <ProductDetailsPage />
@@ -80,7 +81,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "admin/product-detail/:id",
+    path: "/admin/product-detail/:id",
     element: (
       <ProtectedAdmin>
         <AdminProductDetailsPage />
@@ -88,7 +89,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "admin/product-form",
+    path: "/admin/product-form",
     element: (
       <ProtectedAdmin>
         <AdminProductFormPage />
@@ -96,7 +97,15 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "admin/product-form/edit/:id",
+    path: "/admin/orders",
+    element: (
+      <ProtectedAdmin>
+        <AdminOrdersPage />
+      </ProtectedAdmin>
+    ),
+  },
+  {
+    path: "/admin/product-form/edit/:id",
     element: (
       <ProtectedAdmin>
         <AdminProductFormPage />
@@ -104,7 +113,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "order-success/:id",
+    path: "/order-success/:id",
     element: (
       <Protected>
         <OrderSuccessPage />
@@ -112,7 +121,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "orders",
+    path: "/orders",
     element: (
       <Protected>
         <UserOrderPage />
@@ -120,7 +129,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "profile",
+    path: "/profile",
     element: (
       <Protected>
         <UserProfilePage />
@@ -128,11 +137,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "logout",
+    path: "/logout",
     element: <Logout />,
   },
   {
-    path: "forgot-password",
+    path: "/forgot-password",
     element: <ForgotPassword />,
   },
   {

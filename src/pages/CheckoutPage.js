@@ -17,6 +17,7 @@ import {
   selectcurrentOrderPlaced,
 } from "../features/order/orderSlice";
 import { selectUserInfo } from "../features/user/userSlice";
+import { DiscountPrice } from "../app/constants";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const CheckoutPage = () => {
   } = useForm();
 
   const TotalAmount = products.reduce((ammount, item) => {
-    return item.price * item.quantity + ammount;
+    return DiscountPrice(item) * item.quantity + ammount;
   }, 0);
   const TotalItems = products.reduce((total, item) => {
     return item.quantity + total;
@@ -381,7 +382,7 @@ const CheckoutPage = () => {
                                   {product.brand}
                                 </p>
                               </h3>
-                              <p className="ml-4">{product.price}</p>
+                              <p className="ml-4">${DiscountPrice(product)}</p>
                             </div>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">
