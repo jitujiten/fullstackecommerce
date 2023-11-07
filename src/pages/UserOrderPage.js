@@ -1,3 +1,4 @@
+import Footer from "../features/common/Footer";
 import Navbar from "../features/navbar/Navbar";
 import UserOrders from "../features/user/components/userOrders";
 
@@ -10,6 +11,7 @@ export default function UserOrderPage() {
         </h1>
         <UserOrders/>
       </Navbar>
+      <Footer/>
     </div>
   );
 }

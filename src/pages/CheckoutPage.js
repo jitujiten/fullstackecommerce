@@ -9,21 +9,22 @@ import {
   updateCartAsync,
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
-import {
-  updateUserAsync,
-} from "../features/auth/authSlice";
+import { updateUserAsync } from "../features/auth/authSlice";
 import {
   addOrderAsync,
   selectcurrentOrderPlaced,
 } from "../features/order/orderSlice";
 import { selectUserInfo } from "../features/user/userSlice";
 import { DiscountPrice } from "../app/constants";
+import Modal from "../features/common/Modal";
+import Navbar from "../features/navbar/Navbar";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
   const [selectAddress, setselectAddress] = useState(null);
   const [payMentMethod, setPayMentMethod] = useState("cash");
+  const [openModal, setopenModal] = useState(null);
   const orderPlaced = useSelector(selectcurrentOrderPlaced);
   const products = useSelector(selectItems);
   const user = useSelector(selectUserInfo);
@@ -74,7 +75,7 @@ const CheckoutPage = () => {
   };
 
   return (
-    <>
+    <Navbar>
       {!products.length && <Navigate to="/" replace={true}></Navigate>}
       {orderPlaced?.id && (
         <Navigate
@@ -410,12 +411,21 @@ const CheckoutPage = () => {
                             </div>
 
                             <div className="flex">
+                              <Modal
+                                title={`Delete cart Item ${product.title}`}
+                                message={`Are you sure you want to delete? ${product.title}`}
+                                dangerOption="Delete"
+                                cancelOption="Cancel"
+                                showModal={openModal === product.id}
+                                cancelAction={(e) => setopenModal(-1)}
+                                dangerAction={(e) => {
+                                  removeHandler(product.id);
+                                }}
+                              />
                               <button
                                 type="button"
                                 className="font-medium text-indigo-600 hover:text-indigo-500"
-                                onClick={() => {
-                                  removeHandler(product.id);
-                                }}
+                                onClick={(e) => setopenModal(product.id)}
                               >
                                 Remove
                               </button>
@@ -468,7 +478,7 @@ const CheckoutPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </Navbar>
   );
 };
 

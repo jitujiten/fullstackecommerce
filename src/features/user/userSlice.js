@@ -80,5 +80,6 @@ export const { increment } = userSlice.actions;
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectUserOrders = (state) => state.user.userOrders;
 export const selectUserInfo = (state) => state.user.userInfo;
+export const selectUserStatus = (state) => state.user.status;
 
 export default userSlice.reducer;

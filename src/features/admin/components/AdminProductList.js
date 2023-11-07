@@ -11,6 +11,7 @@ import {
   selectCategory,
   DeleteProductByIdAsync,
   EditProductAsync,
+  selectProductlistStatus,
 } from "../../product/ProductSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -30,6 +31,8 @@ import {
 import { Link, renderMatches } from "react-router-dom";
 import { DiscountPrice, ITEMS_PER_PAGE } from "../../../app/constants";
 import { Pagination } from "../../common/Pagination";
+import { BallTriangle } from "react-loader-spinner";
+import Modal from "../../common/Modal";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -47,10 +50,13 @@ export default function AdminProductList() {
   const brandData = useSelector(selectBrands);
   const categorydata = useSelector(selectCategory);
   const totalItems = useSelector(selecttotalItems);
+  const status = useSelector(selectProductlistStatus);
+
   const [sort, setSort] = useState({});
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [openModal, setopenModal] = useState(null);
 
   const filters = [
     {
@@ -92,11 +98,7 @@ export default function AdminProductList() {
   };
 
   const deleteProduct = (product) => {
-    const userConfirmed = window.confirm("Are you sure you want to delete?");
-
-    if (userConfirmed) {
-      dispatch(EditProductAsync({ ...product, deleted: true }));
-    }
+    dispatch(EditProductAsync({ ...product, deleted: true }));
   };
 
   useEffect(() => {
@@ -216,6 +218,9 @@ export default function AdminProductList() {
                 <ProductGrid
                   products={products}
                   deleteProduct={deleteProduct}
+                  status={status}
+                  openModal={openModal}
+                  setopenModal={setopenModal}
                 />
               </div>
             </div>
@@ -409,74 +414,109 @@ const DesktopFilter = ({ handleFilter, filters }) => {
   );
 };
 
-const ProductGrid = ({ products, deleteProduct }) => {
+const ProductGrid = ({
+  products,
+  deleteProduct,
+  status,
+  setopenModal,
+  openModal,
+}) => {
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-          {products?.map((product) => (
-            <div key={product.id}>
-              <Link to={`product-detail/${product.id}`}>
-                <div
-                  key={product.id}
-                  className="group relative p-2 border-solid border-2 border-gray-200 rounded-lg"
-                >
-                  <div className="h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+    <>
+      {status === "loading" ? (
+        <div className="flex items-center justify-center h-screen">
+          <BallTriangle
+            height={100}
+            width={100}
+            radius={5}
+            color="#600AFF"
+            ariaLabel="ball-triangle-loading"
+            wrapperClass={{}}
+            wrapperStyle=""
+            visible={true}
+          />
+        </div>
+      ) : (
+        <div className="bg-white">
+          <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
+            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+              {products?.map((product) => (
+                <div key={product.id}>
+                  <Link to={`product-detail/${product.id}`}>
+                    <div
+                      key={product.id}
+                      className="group relative p-2 border-solid border-2 border-gray-200 rounded-lg"
+                    >
+                      <div className="h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
+                        <img
+                          src={product.thumbnail}
+                          alt={product.title}
+                          className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                        />
+                      </div>
+                      <div className="mt-4 flex justify-between">
+                        <div className="w-1/2">
+                          <h3 className="text-sm min-w-1/2 whitespace-nowrap overflow-hidden text-gray-900 text-ellipsis text-left">
+                            {product.title}
+                          </h3>
+                          <p className="mt-2 text-sm flex items-start	gap-1 text-gray-500">
+                            <StarIcon className="w-6 h-6 inline" />
+                            <span className=" mt-1">{product.rating}</span>
+                          </p>
+                        </div>
+                        <div className=" flex flex-col">
+                          <p className="text-sm font-medium text-gray-900">
+                            ${DiscountPrice(product)}
+                          </p>
+                          <p className="text-sm font-medium text-gray-400 line-through">
+                            ${product.price}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex  justify-between">
+                        {product.deleted && (
+                          <p className="text-sm  text-red-400 ">
+                            Product Deleted
+                          </p>
+                        )}
+                        {product.stock <= 0 && (
+                          <p className="text-sm  text-red-400 ">Out Of Stock</p>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="flex mt-3 justify-evenly">
+                    <Link
+                      to={`/admin/product-form/edit/${product.id}`}
+                      className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    >
+                      Edit Product
+                    </Link>
+                    <Modal
+                      title={`Delete cart Item ${product.title}`}
+                      message={`Are you sure you want to delete? ${product.title}`}
+                      dangerOption="Delete"
+                      cancelOption="Cancel"
+                      showModal={openModal === product.id}
+                      cancelAction={(e) => setopenModal(null)}
+           e           dangerAction={(e) => {
+                        deleteProduct(product);
+                        setopenModal(null);
+                      }}
                     />
-                  </div>
-                  <div className="mt-4 flex justify-between">
-                    <div className="w-1/2">
-                      <h3 className="text-sm min-w-1/2 whitespace-nowrap overflow-hidden text-gray-900 text-ellipsis text-left">
-                        {product.title}
-                      </h3>
-                      <p className="mt-2 text-sm flex items-start	gap-1 text-gray-500">
-                        <StarIcon className="w-6 h-6 inline" />
-                        <span className=" mt-1">{product.rating}</span>
-                      </p>
-                    </div>
-                    <div className=" flex flex-col">
-                      <p className="text-sm font-medium text-gray-900">
-                        ${DiscountPrice(product)}
-                      </p>
-                      <p className="text-sm font-medium text-gray-400 line-through">
-                        ${product.price}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex  justify-between">
-                    {product.deleted && (
-                      <p className="text-sm  text-red-400 ">Product Deleted</p>
-                    )}
-                    {product.stock <= 0 && (
-                      <p className="text-sm  text-red-400 ">Out Of Stock</p>
-                    )}
+                    {!product.deleted && <button
+                      onClick={(e) => setopenModal(product.id)}
+                      className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                    >
+                      Delete Product
+                    </button>}
                   </div>
                 </div>
-              </Link>
-              <div className="flex mt-3 justify-evenly">
-                <Link
-                  to={`/admin/product-form/edit/${product.id}`}
-                  className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                >
-                  Edit Product
-                </Link>
-                <button
-                  onClick={() => {
-                    deleteProduct(product);
-                  }}
-                  className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                >
-                  Delete Product
-                </button>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-    </div>
+      )} 
+    </>
   );
 };

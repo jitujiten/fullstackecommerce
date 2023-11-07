@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { RadioGroup } from "@headlessui/react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectedProduct, fetchProductByIdAsync } from "../ProductSlice";
+import { selectedProduct, fetchProductByIdAsync, selectProductlistStatus } from "../ProductSlice";
 import { useParams } from "react-router-dom";
-import {selectLoggedinUser} from "../../auth/authSlice";
+import { selectLoggedinUser } from "../../auth/authSlice";
 import { addToCartAsync, selectItems } from "../../cart/cartSlice";
 import { DiscountPrice } from "../../../app/constants";
-
+import { useAlert } from "react-alert";
+import { BallTriangle } from "react-loader-spinner";
 
 const colors = [
   { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
@@ -33,9 +34,6 @@ const highlights = [
   "Ultra-soft 100% cotton",
 ];
 
-
-
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -46,29 +44,50 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const product = useSelector(selectedProduct);
   const params = useParams();
-  const user=useSelector(selectLoggedinUser)
-  const items=useSelector(selectItems);
+  const user = useSelector(selectLoggedinUser);
+  const items = useSelector(selectItems);
+  const alert = useAlert();
+  const status = useSelector(selectProductlistStatus);
 
+  
   useEffect(() => {
     dispatch(fetchProductByIdAsync(params.id));
   }, [dispatch, params.id]);
 
-  
-const handleCart=(e)=>{
-  e.preventDefault()
-  if(items.findIndex(item=>item.productId===product.id)<0){
-    const newItem={...product,productId:product.id,quantity:1,user:user.id};
-    delete newItem['id'];
-   dispatch(addToCartAsync(newItem)) 
-  }else{
-    console.log("already in the cart");
-  }
- 
-}
-
+  const handleCart = (e) => {
+    e.preventDefault();
+    if (items.findIndex((item) => item.productId === product.id) < 0) {
+      const newItem = {
+        ...product,
+        productId: product.id,
+        quantity: 1,
+        user: user.id,
+      };
+      delete newItem["id"];
+      dispatch(addToCartAsync(newItem));
+      alert.success("Item  Added Successfully!");
+    } else {
+      alert.error("Item Already Added! check your Cart");
+    }
+  };
 
   return (
-    <div className="bg-white">
+    <>
+    {status === "loading" ? (
+      <div className="flex items-center justify-center h-screen">
+        <BallTriangle
+          height={100}
+          width={100}
+          radius={5}
+          color="#600AFF"
+          ariaLabel="ball-triangle-loading"
+          wrapperClass={{}}
+          wrapperStyle=""
+          visible={true}
+        />
+      </div>
+    ) : 
+   ( <div className="bg-white">
       {product && (
         <div className="pt-6">
           <nav aria-label="Breadcrumb">
@@ -369,6 +388,6 @@ const handleCart=(e)=>{
           </div>
         </div>
       )}
-    </div>
+    </div>)}</>
   );
 }

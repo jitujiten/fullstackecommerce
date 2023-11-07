@@ -9,6 +9,7 @@ import {
   fetchAllCategoryAsync,
   selectBrands,
   selectCategory,
+  selectProductlistStatus,
 } from "../ProductSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -27,6 +28,7 @@ import {
 import { Link, renderMatches } from "react-router-dom";
 import { DiscountPrice, ITEMS_PER_PAGE } from "../../../app/constants";
 import { Pagination } from "../../common/Pagination";
+import { BallTriangle } from "react-loader-spinner";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -43,6 +45,7 @@ export default function ProductList() {
   const products = useSelector(selectAllProducts);
   const brandData = useSelector(selectBrands);
   const categorydata = useSelector(selectCategory);
+  const status = useSelector(selectProductlistStatus);
   const totalItems = useSelector(selecttotalItems);
   const [sort, setSort] = useState({});
   const [filter, setFilter] = useState({});
@@ -113,7 +116,7 @@ export default function ProductList() {
         />
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-4xl font-bold tracking-tight text-cyan-900 ">
               All Products
             </h1>
 
@@ -193,7 +196,7 @@ export default function ProductList() {
               {/* Product grid */}
               <div className="lg:col-span-3">
                 {/* this is our product list part */}
-                <ProductGrid products={products} />
+                <ProductGrid products={products} status={status} />
               </div>
             </div>
           </section>
@@ -386,56 +389,75 @@ const DesktopFilter = ({ handleFilter, filters }) => {
   );
 };
 
-const ProductGrid = ({ products }) => {
+const ProductGrid = ({ products, status }) => {
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-          {products?.map((product) => (
-            <Link key={product.id} to={`product-detail/${product.id}`}>
-              <div
-                key={product.id}
-                className="group relative p-2 border-solid border-2 border-gray-200 rounded-lg"
-              >
-                <div className="h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div className="w-1/2">
-                    <h3 className="text-sm min-w-1/2 whitespace-nowrap overflow-hidden text-gray-900 text-ellipsis text-left">
-                      {product.title}
-                    </h3>
-                    <p className="mt-2 text-sm flex items-start	gap-1 text-gray-500">
-                      <StarIcon className="w-6 h-6 inline" />
-                      <span className=" mt-1">{product.rating}</span>
-                    </p>
-                  </div>
-                  <div className=" flex flex-col">
-                    <p className="text-sm font-medium text-gray-900">
-                      ${DiscountPrice(product)}
-                    </p>
-                    <p className="text-sm font-medium text-gray-400 line-through">
-                      ${product.price}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex  justify-between">
-                {product.deleted && (
-                  <p className="text-sm  text-red-400 ">Product Deleted</p>
-                )}
-                {product.stock <= 0 && (
-                  <p className="text-sm  text-red-400 ">Out Of Stock</p>
-                )}
-                </div>
-              </div>
-            </Link>
-          ))}
+    <>
+      {status === "loading" ? (
+        <div className="flex items-center justify-center h-screen">
+          <BallTriangle
+            height={100}
+            width={100}
+            radius={5}
+            color="#600AFF"
+            ariaLabel="ball-triangle-loading"
+            wrapperClass={{}}
+            wrapperStyle=""
+            visible={true}
+          />
         </div>
-      </div>
-    </div>
+      ) : (
+        <div className="bg-white">
+          <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
+            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+              {products?.map((product) => (
+                <Link key={product.id} to={`product-detail/${product.id}`}>
+                  <div
+                    key={product.id}
+                    className="group relative p-2 border-solid border-2 border-gray-200 rounded-lg"
+                  >
+                    <div className="h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
+                      <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                      />
+                    </div>
+                    <div className="mt-4 flex justify-between">
+                      <div className="w-1/2">
+                        <h3 className="text-sm min-w-1/2 whitespace-nowrap overflow-hidden text-gray-900 text-ellipsis text-left">
+                          {product.title}
+                        </h3>
+                        <p className="mt-2 text-sm flex items-start	gap-1 text-gray-500">
+                          <StarIcon className="w-6 h-6 inline" />
+                          <span className=" mt-1">{product.rating}</span>
+                        </p>
+                      </div>
+                      <div className=" flex flex-col">
+                        <p className="text-sm font-medium text-gray-900">
+                          ${DiscountPrice(product)}
+                        </p>
+                        <p className="text-sm font-medium text-gray-400 line-through">
+                          ${product.price}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex  justify-between">
+                      {product.deleted && (
+                        <p className="text-sm  text-red-400 ">
+                          Product Deleted
+                        </p>
+                      )}
+                      {product.stock <= 0 && (
+                        <p className="text-sm  text-red-400 ">Out Of Stock</p>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

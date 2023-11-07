@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectItems } from "../cart/cartSlice";
 import { selectLoggedinUser } from "../auth/authSlice";
+import { useAlert } from "react-alert";
 
 const user = {
   name: "Tom Cook",
@@ -18,6 +19,7 @@ const user = {
   imageUrl:
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 };
+
 const navigation = [
   { name: "products", link: "/", user: true },
   { name: "Admin", link: "/admin", admin: true },
@@ -37,6 +39,14 @@ export default function Navbar({ children }) {
   const dispatch = useDispatch();
   const items = useSelector(selectItems);
   const Mainuser = useSelector(selectLoggedinUser);
+  const alert = useAlert();
+
+  const Carthandler = () => {
+    if (!items.length) {
+      alert.error("No item found in Cart! Add one..");
+    }
+  };
+
   return (
     <>
       <div className="min-h-full">
@@ -46,12 +56,12 @@ export default function Navbar({ children }) {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-">
                       <Link to="/">
                         <img
-                          className="h-8 w-8"
-                          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                          alt="Your Company"
+                          className="h-10 w-10"
+                          src="/oneStore.png"
+                          alt="oneStore"
                         />
                       </Link>
                     </div>
@@ -79,7 +89,7 @@ export default function Navbar({ children }) {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <Link to="/cart">
+                      <Link to="/cart" onClick={Carthandler}>
                         <button
                           type="button"
                           className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -143,7 +153,7 @@ export default function Navbar({ children }) {
 
                   <div className="-mr-2 flex md:hidden">
                     {/* Mobile menu button */}
-                    <Link to="/cart">
+                    <Link to="/cart" onClick={Carthandler}>
                       <button
                         type="button"
                         className="relative mt-3 -mr-1 ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -233,7 +243,7 @@ export default function Navbar({ children }) {
         </Disclosure>
 
         <main>
-          <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-8xl py-6 sm:px-6 lg:px-8">
             {children}
           </div>
         </main>
