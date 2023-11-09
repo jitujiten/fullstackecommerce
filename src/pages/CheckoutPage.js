@@ -9,7 +9,7 @@ import {
   updateCartAsync,
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
-import { updateUserAsync } from "../features/auth/authSlice";
+import { updateUserAsync } from "../features/user/userSlice";
 import {
   addOrderAsync,
   selectcurrentOrderPlaced,
@@ -36,14 +36,14 @@ const CheckoutPage = () => {
   } = useForm();
 
   const TotalAmount = products.reduce((ammount, item) => {
-    return DiscountPrice(item) * item.quantity + ammount;
+    return DiscountPrice(item.product) * item.quantity + ammount;
   }, 0);
   const TotalItems = products.reduce((total, item) => {
     return item.quantity + total;
   }, 0);
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartAsync({ ...item, quantity: +e.target.value }));
+    dispatch(updateCartAsync({ id:item.id, quantity: +e.target.value }));
   };
 
   const removeHandler = (id) => {
@@ -64,7 +64,7 @@ const CheckoutPage = () => {
       items: products,
       totalAmount: TotalAmount,
       totalItems: TotalItems,
-      user: user,
+      user: user.id,
       payMentMethod: payMentMethod,
       selectAddress: selectAddress,
       status: "pending",
@@ -368,8 +368,8 @@ const CheckoutPage = () => {
                       <li key={product.id} className="flex py-6">
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                           <img
-                            src={product.thumbnail}
-                            alt={product.title}
+                            src={product.product.thumbnail}
+                            alt={product.product.title}
                             className="h-full w-full object-cover object-center"
                           />
                         </div>
@@ -378,12 +378,12 @@ const CheckoutPage = () => {
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href={product.href}>{product.title}</a>
+                                <a href={product.product.id}>{product.product.title}</a>
                                 <p className="text-left	 mt-1 text-sm text-gray-500">
-                                  {product.brand}
+                                  {product.product.brand}
                                 </p>
                               </h3>
-                              <p className="ml-4">${DiscountPrice(product)}</p>
+                              <p className="ml-4">${DiscountPrice(product.product)}</p>
                             </div>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">

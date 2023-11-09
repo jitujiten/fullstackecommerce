@@ -144,7 +144,7 @@ const AdminOrders = () => {
                                   />
                                 </svg>
                               </div>
-                              <h1 className="text-3xl xl:text-10xl font-abhaya-libre text-green-900 font-bold leading-none">
+                              <h1 className="text-3xl xl:text-10xl font-abhaya-libre text-cyan-900 font-bold leading-none">
                                 {order.id}
                               </h1>
                             </div>
@@ -156,21 +156,25 @@ const AdminOrders = () => {
                                 key={item.index}
                               >
                                 <div className="mr-2">
-                                  <img
-                                    className="w-8 h-8 rounded-lg"
-                                    src={item.thumbnail}
-                                  />
+                                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                    <img
+                                      src={item.thumbnail}
+                                      alt={item.title}
+                                      className="h-full w-full object-cover object-center"
+                                    />
+                                  </div>
                                 </div>
                                 <span>
-                                  <span className="text-sm xl:text-10xl font-abhaya-libre text-brown-600 font-bold leading-none py-2  whitespace-nowrap">
+                                  <h1 className="text-cyan-900 font-bold text-md" >
                                     {item.title}
-                                  </span>
-                                  <h1 className="text-sm xl:text-10xl font-abhaya-libre text-brown-600 font-bold leading-none my-2">
-                                    Qty:-{item.quantity}
                                   </h1>
-                                  <h1 className="text-sm xl:text-10xl font-abhaya-libre text-green-900 font-bold leading-none">
-                                    $ {DiscountPrice(item)}
+                                  <h1 className="text-cyan-900 font-bold text-md" >
+                                  <span className="bg-white-300">Qty:</span> {item.quantity}
                                   </h1>
+                                  <h1 className="text-black-900 font-bold text-md" >
+                                  $ {DiscountPrice(item)}
+                                  </h1>
+                                
                                 </span>
                               </div>
                             ))}

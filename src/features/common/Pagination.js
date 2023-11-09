@@ -3,7 +3,7 @@ import { ITEMS_PER_PAGE } from "../../app/constants";
 
 export const Pagination = ({ handlePage, page, setPage, totalItems }) => {
     const TotalPagenumber = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
+   
     return (
       <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
         <div className="flex flex-1 justify-between sm:hidden">
@@ -63,7 +63,7 @@ export const Pagination = ({ handlePage, page, setPage, totalItems }) => {
                     aria-current="page"
                     className={`relative z-10 inline-flex items-center ${
                       index + 1 === page
-                        ? "bg-indigo-600 text-white"
+                        ? "bg-blue-600 text-white"
                         : "text-gray-400"
                     }  px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
                   >

@@ -11,6 +11,7 @@ import { Link, Navigate } from "react-router-dom";
 import { DiscountPrice } from "../../app/constants";
 import { BallTriangle } from "react-loader-spinner";
 import Modal from "../common/Modal";
+import { CurrencyDollarIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 export default function Cart() {
   const dispatch = useDispatch();
@@ -20,14 +21,14 @@ export default function Cart() {
   const status = useSelector(selectCartStatus);
 
   const TotalAmount = products.reduce((ammount, item) => {
-    return DiscountPrice(item) * item.quantity + ammount;
+    return DiscountPrice(item.product) * item.quantity + ammount;
   }, 0);
   const TotalItems = products.reduce((total, item) => {
     return item.quantity + total;
   }, 0);
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartAsync({ ...item, quantity: +e.target.value }));
+    dispatch(updateCartAsync({ id:item.id, quantity: +e.target.value }));
   };
 
   const removeHandler = (id) => {
@@ -63,8 +64,8 @@ export default function Cart() {
                     <li key={product.id} className="flex py-6">
                       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                         <img
-                          src={product.thumbnail}
-                          alt={product.title}
+                          src={product.product.thumbnail}
+                          alt={product.product.title}
                           className="h-full w-full object-cover object-center"
                         />
                       </div>
@@ -73,12 +74,12 @@ export default function Cart() {
                         <div>
                           <div className="flex justify-between text-base font-medium text-gray-900">
                             <h3>
-                              <a href={product.href}>{product.title}</a>
+                              <a href={product.product.id}>{product.product.title}</a>
                               <p className="text-left	 mt-1 text-sm text-gray-500">
-                                {product.brand}
+                                {product.product.brand}
                               </p>
                             </h3>
-                            <p className="ml-4">${DiscountPrice(product)}</p>
+                            <p className="ml-4">${DiscountPrice(product.product)}</p>
                           </div>
                         </div>
                         <div className="flex flex-1 items-end justify-between text-sm">
@@ -120,10 +121,10 @@ export default function Cart() {
 
                             <button
                               type="button"
-                              className="font-medium text-indigo-600 hover:text-indigo-500"
+                              className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                               onClick={(e) => setopenModal(product.id)}
                             >
-                              Remove
+                              <TrashIcon className="w-5 h-5" />
                             </button>
                           </div>
                         </div>
@@ -137,7 +138,7 @@ export default function Cart() {
             <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
               <div className="flex justify-between text-base my-2 font-medium text-gray-900">
                 <p>Subtotal</p>
-                <p>${TotalAmount}</p>
+                <p>$ {TotalAmount}</p>
               </div>
               <div className="flex justify-between text-base my-2 font-medium text-gray-900">
                 <p>Total items in cart</p>
