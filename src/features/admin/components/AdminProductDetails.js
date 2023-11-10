@@ -8,12 +8,10 @@ import {
   selectProductlistStatus,
 } from "../../product/ProductSlice";
 import { useParams } from "react-router-dom";
-import { selectLoggedinUser } from "../../auth/authSlice";
 import { addToCartAsync, selectItems } from "../../cart/cartSlice";
 import { DiscountPrice } from "../../../app/constants";
 import { BallTriangle } from "react-loader-spinner";
 import { useAlert } from "react-alert";
-
 
 const colors = [
   { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
@@ -49,7 +47,6 @@ export default function AdminProductDetail() {
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const product = useSelector(selectedProduct);
   const params = useParams();
-  const user = useSelector(selectLoggedinUser);
   const status = useSelector(selectProductlistStatus);
   const items = useSelector(selectItems);
   const alert = useAlert();
@@ -58,25 +55,19 @@ export default function AdminProductDetail() {
     dispatch(fetchProductByIdAsync(params.id));
   }, [dispatch, params.id]);
 
- 
-
   const handleCart = (e) => {
     e.preventDefault();
-    if (items.findIndex((item) => item.productId === product.id) < 0) {
+    if (items.findIndex((item) => item.product.id === product.id) < 0) {
       const newItem = {
-        ...product,
-        productId: product.id,
-        quantity: 1,
-        user: user.id,
+        product: product.id,
+        quantity: 1
       };
-      delete newItem["id"];
       dispatch(addToCartAsync(newItem));
       alert.success("Item  Added Successfully!");
     } else {
       alert.error("Item Already Added! check your Cart");
     }
   };
-
 
   return (
     <>

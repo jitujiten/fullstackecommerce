@@ -4,7 +4,6 @@ import { RadioGroup } from "@headlessui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectedProduct, fetchProductByIdAsync, selectProductlistStatus } from "../ProductSlice";
 import { useParams } from "react-router-dom";
-import { selectLoggedinUser } from "../../auth/authSlice";
 import { addToCartAsync, selectItems } from "../../cart/cartSlice";
 import { DiscountPrice } from "../../../app/constants";
 import { useAlert } from "react-alert";
@@ -44,7 +43,6 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const product = useSelector(selectedProduct);
   const params = useParams();
-  const user = useSelector(selectLoggedinUser);
   const items = useSelector(selectItems);
   const alert = useAlert();
   const status = useSelector(selectProductlistStatus);
@@ -59,8 +57,7 @@ export default function ProductDetail() {
     if (items.findIndex((item) => item.product.id === product.id) < 0) {
       const newItem = {
         product: product.id,
-        quantity: 1,
-        user: user.id,
+        quantity: 1
       };
       dispatch(addToCartAsync(newItem));
       alert.success("Item  Added Successfully!");

@@ -1,12 +1,3 @@
-// A mock function to mimic making an async request for data
-export function fetchAllProduct(product) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/products");
-    const data = await response.json();
-    resolve({ data });
-  });
-}
-
 
 export function fetchProductById(id) {
   return new Promise(async (resolve) => {
@@ -16,12 +7,12 @@ export function fetchProductById(id) {
   });
 }
 
-export function fetchProductsByFilter(filter, sort, pagination) {
+export function fetchProductsByFilter(filter, sort, pagination,admin) {
   // filter={"category":["smartphone","laptops"]}
   //sort={_sort:"price",_order:"desc"}  _sort=views&_order=asc
   // page={_page:1,limit:10}  _page=1&_limit=10
   let queryString = "";
-  for (var key in filter) {
+  for (let key in filter) {
     const categoryValues = filter[key];
     if (categoryValues.length > 0) {
       const lastCategoryValues = categoryValues[categoryValues.length - 1];
@@ -29,12 +20,16 @@ export function fetchProductsByFilter(filter, sort, pagination) {
     }
   }
   //sort={_sort:"price",_order:"desc"}  _sort=views&_order=asc
-  for (var key in sort) {
+  for (let key in sort) {
     queryString += `${key}=${sort[key]}&`;
   }
   // page={_page:1,limit:10}  _page=1&_limit=10
-  for (var key in pagination) {
+  for (let key in pagination) {
     queryString += `${key}=${pagination[key]}&`;
+  }
+
+  if(admin){
+    queryString += `admin=true`;
   }
 
   return new Promise(async (resolve) => {

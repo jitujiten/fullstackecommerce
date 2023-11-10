@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  fetchAllProductAsync,
   selectAllProducts,
   selecttotalItems,
   fetchProductsByFilterAsync,
@@ -9,17 +8,13 @@ import {
   fetchAllCategoryAsync,
   selectBrands,
   selectCategory,
-  DeleteProductByIdAsync,
   EditProductAsync,
   selectProductlistStatus,
 } from "../../product/ProductSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
   StarIcon,
-  PencilSquareIcon,
 } from "@heroicons/react/20/solid";
 import {
   ChevronDownIcon,
@@ -28,7 +23,7 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
-import { Link, renderMatches } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { DiscountPrice, ITEMS_PER_PAGE } from "../../../app/constants";
 import { Pagination } from "../../common/Pagination";
 import { BallTriangle } from "react-loader-spinner";
@@ -103,7 +98,7 @@ export default function AdminProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-    dispatch(fetchProductsByFilterAsync({ filter, sort, pagination }));
+    dispatch(fetchProductsByFilterAsync({ filter, sort, pagination,admin:true }));
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
@@ -493,7 +488,7 @@ const ProductGrid = ({
                       Edit Product
                     </Link>
                     <Modal
-                      title={`Delete cart Item ${product.title}`}
+                      title={`Delete Product (${product.title})`}
                       message={`Are you sure you want to delete? ${product.title}`}
                       dangerOption="Delete"
                       cancelOption="Cancel"

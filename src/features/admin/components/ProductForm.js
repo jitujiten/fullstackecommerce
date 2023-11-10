@@ -49,7 +49,7 @@ const ProductForm = () => {
   useEffect(() => {
     if (params.id) {
       dispatch(fetchProductByIdAsync(params.id));
-    }else{
+    } else {
       dispatch(clearSelectedProduct());
     }
   }, [params.id, dispatch, setValue]);
@@ -69,8 +69,7 @@ const ProductForm = () => {
       setValue("image3", selectedProductIS.images[2]);
       setValue("image4", selectedProductIS.images[3]);
     }
-  }, [selectedProductIS,params.id, setValue]);
-
+  }, [selectedProductIS, params.id, setValue]);
 
   return (
     <form
@@ -109,11 +108,16 @@ const ProductForm = () => {
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
-            {params.id?`Edit`:`Add`} Product Form
+            {params.id ? `Edit` : `Add`} Product Form
           </h2>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="col-span-full">
+              {selectedProductIS?.deleted === true ? (
+                <h2 className="text-base font-semibold leading-7 text-red-500">
+                  Product Is Deleted
+                </h2>
+              ) : null}
               <label
                 htmlFor="title"
                 className="text-left block text-sm font-medium leading-6 text-gray-900"
