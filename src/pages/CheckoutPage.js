@@ -41,7 +41,7 @@ const CheckoutPage = () => {
   }, 0);
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartAsync({ id:item.id, quantity: +e.target.value }));
+    dispatch(updateCartAsync({ id: item.id, quantity: +e.target.value }));
   };
 
   const removeHandler = (id) => {
@@ -73,13 +73,17 @@ const CheckoutPage = () => {
   };
 
   return (
-    <Navbar>
+    <div>
       {!products.length && <Navigate to="/" replace={true}></Navigate>}
-      {orderPlaced?.id && (
+
+      {orderPlaced && orderPlaced?.payMentMethod === "cash" && (
         <Navigate
           to={`/order-success/${orderPlaced.id}`}
           replace={true}
         ></Navigate>
+      )}
+      {orderPlaced && orderPlaced?.payMentMethod === "card" && (
+        <Navigate to={`/stripe-checkout/`} replace={true}></Navigate>
       )}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
@@ -376,12 +380,16 @@ const CheckoutPage = () => {
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href={product.product.id}>{product.product.title}</a>
+                                <a href={product.product.id}>
+                                  {product.product.title}
+                                </a>
                                 <p className="text-left	 mt-1 text-sm text-gray-500">
                                   {product.product.brand}
                                 </p>
                               </h3>
-                              <p className="ml-4">${DiscountPrice(product.product)}</p>
+                              <p className="ml-4">
+                                ${DiscountPrice(product.product)}
+                              </p>
                             </div>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">
@@ -476,7 +484,7 @@ const CheckoutPage = () => {
           </div>
         </div>
       </div>
-    </Navbar>
+    </div>
   );
 };
 

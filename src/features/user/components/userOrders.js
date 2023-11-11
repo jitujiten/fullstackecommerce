@@ -12,11 +12,10 @@ import { BallTriangle } from "react-loader-spinner";
 function UserOrders() {
   const dispatch = useDispatch();
   const orders = useSelector(selectUserOrders);
-  const userInfo = useSelector(selectUserInfo);
   const status = useSelector(selectUserStatus);
 
   useEffect(() => {
-    dispatch(fetchLoggedInUserOrdersAsync(userInfo.id));
+    dispatch(fetchLoggedInUserOrdersAsync());
   }, [dispatch]);
 
   return (

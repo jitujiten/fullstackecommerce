@@ -4,6 +4,7 @@ import {
   deleteCartItemAsync,
   selectCartStatus,
   selectItems,
+  selectcartLoader,
   updateCartAsync,
 } from "./cartSlice";
 
@@ -19,6 +20,8 @@ export default function Cart() {
   const [openModal, setopenModal] = useState(null);
   const products = useSelector(selectItems);
   const status = useSelector(selectCartStatus);
+  const cartLoader=useSelector(selectcartLoader)
+
 
   const TotalAmount = products.reduce((ammount, item) => {
     return DiscountPrice(item.product) * item.quantity + ammount;
@@ -52,7 +55,7 @@ export default function Cart() {
         </div>
       ) : (
         <>
-          {!products.length && <Navigate to="/" replace={true}></Navigate>}
+          {!products.length && cartLoader &&  <Navigate to="/" replace={true}></Navigate>}
           <div className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
             <h1 className="text-4xl font-bold tracking-tight text-cyan-900">
               Cart
