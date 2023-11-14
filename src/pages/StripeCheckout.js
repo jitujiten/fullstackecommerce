@@ -11,7 +11,7 @@ import { selectcurrentOrderPlaced } from "../features/order/orderSlice";
 // recreating the Stripe object on every render.
 // This is your test publishable API key.
 const stripePromise = loadStripe(
-  "pk_test_51OBA3FSIDQB38awG8xmu8ZeTeGSKymjHtRVYPanNDbtQHs3Ee9biofveEKISgEcmW49rpk7Xx7VNB8uSwxuX8WYS00DT1q5tEB"
+  "sk_test_51OBA3FSIDQB38awGbd89RJI4l86JmW0FJcoWQ9X88yURzGoHPAfnmOPOon9zU8CHuRMZgXnWXD4QM7KNPdJV4cJl00YD5m1bbd"
 );
 
 export default function StripeCheckout() {

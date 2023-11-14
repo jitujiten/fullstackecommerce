@@ -89,7 +89,7 @@ export default function Navbar({ children }) {
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-4 flex items-center md:ml-6">
-                        <Link to="/cart" onClick={Carthandler}>
+                        <Link to="/my-cart" onClick={Carthandler}>
                           <button
                             type="button"
                             className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -153,7 +153,7 @@ export default function Navbar({ children }) {
 
                     <div className="-mr-2 flex md:hidden">
                       {/* Mobile menu button */}
-                      <Link to="/cart" onClick={Carthandler}>
+                      <Link to="/my-cart" onClick={Carthandler}>
                         <button
                           type="button"
                           className="relative mt-3 -mr-1 ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"

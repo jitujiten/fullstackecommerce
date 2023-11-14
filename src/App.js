@@ -71,7 +71,7 @@ const router = createBrowserRouter([
     element: <SignupPage />,
   },
   {
-    path: "/cart",
+    path: "/my-cart",
     element: (
       <Protected>
         <CartPage />
@@ -190,11 +190,9 @@ function App() {
 
   return (
     <div className="App">
-      {userChecked && (
         <Provider template={AlertTemplate} {...options}>
           <RouterProvider router={router} />
         </Provider>
-      )}
     </div>
   );
 }
