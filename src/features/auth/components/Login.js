@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectLoggedinUser, selectError, loginUserAsync, errorhandler } from "../authSlice";
+import {
+  selectLoggedinUser,
+  selectError,
+  loginUserAsync,
+  errorhandler,
+  mailsent,
+} from "../authSlice";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
@@ -17,11 +23,10 @@ export default function Login() {
     formState: { errors },
   } = useForm();
 
-
-useEffect(()=>{
-  dispatch(errorhandler)
-},[dispatch])
-
+  useEffect(() => {
+    dispatch(errorhandler);
+    dispatch(mailsent);
+  }, [dispatch]);
 
   return (
     <>

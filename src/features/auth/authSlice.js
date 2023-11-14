@@ -6,6 +6,8 @@ import {
   checkAuth,
   fetchLoggedInUserOrders,
   updateUser,
+  resetPasswordRequest,
+  resetPassword
 } from "./authAPI";
 
 const initialState = {
@@ -14,10 +16,12 @@ const initialState = {
   error: null,
   userChecked: false,
   loading: true,
+  mailSent:false,
+  passwordReset:false
 };
 
 export const createUserAsync = createAsyncThunk(
-  "user/createUser",
+  "auth/createUser",
   async (userData) => {
     const response = await createUser(userData);
     // The value we return becomes the `fulfilled` action payload
@@ -26,7 +30,7 @@ export const createUserAsync = createAsyncThunk(
 );
 
 export const loginUserAsync = createAsyncThunk(
-  "user/loginUser",
+  "auth/loginUser",
   async (loginInfo, { rejectWithValue }) => {
     try {
       const response = await loginUser(loginInfo);
@@ -39,25 +43,48 @@ export const loginUserAsync = createAsyncThunk(
   }
 );
 
-export const checkAuthAsync = createAsyncThunk("user/checkAuth", async () => {
+export const checkAuthAsync = createAsyncThunk("auth/checkAuth", async () => {
   try {
     const response = await checkAuth();
     return response.data;
   } catch (error) {
     console.log(error);
   }
-
-  // The value we return becomes the `fulfilled` action payload
 });
 
-export const signOutAsync = createAsyncThunk("user/signOut", async () => {
+export const resetPasswordRequestAsync = createAsyncThunk(
+  "auth/resetPasswordRequest",
+  async (emailInfo) => {
+    try {
+      const response = await resetPasswordRequest(emailInfo);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const resetPasswordAsync = createAsyncThunk(
+  "auth/resetPassword",
+  async (password) => {
+    try {
+      const response = await resetPassword(password);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+
+export const signOutAsync = createAsyncThunk("auth/signOut", async () => {
   const response = await signOut();
   // The value we return becomes the `fulfilled` action payload
   return response.data;
 });
 
 export const fetchLoggedInUserOrdersAsync = createAsyncThunk(
-  "user/fetchLoggedInUserOrders",
+  "auth/fetchLoggedInUserOrders",
   async () => {
     const response = await fetchLoggedInUserOrders();
     // The value we return becomes the `fulfilled` action payload
@@ -66,7 +93,7 @@ export const fetchLoggedInUserOrdersAsync = createAsyncThunk(
 );
 
 export const updateUserAsync = createAsyncThunk(
-  "user/updateUser",
+  "auth/updateUser",
   async (update) => {
     const response = await updateUser(update);
     // The value we return becomes the `fulfilled` action payload
@@ -75,13 +102,16 @@ export const updateUserAsync = createAsyncThunk(
 );
 
 export const authSlice = createSlice({
-  name: "user",
+  name: "auth",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     errorhandler: (state) => {
       state.error = null;
     },
+    mailsent:(state)=>{
+      state.mailSent=false;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -117,7 +147,7 @@ export const authSlice = createSlice({
         state.status = "idle";
         state.LoggedInUser = action.payload;
         state.userChecked = true;
-        state.loading = false; 
+        state.loading = false;
       })
       .addCase(checkAuthAsync.rejected, (state, action) => {
         state.status = "rejected";
@@ -136,6 +166,19 @@ export const authSlice = createSlice({
       .addCase(updateUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.LoggedInUser = action.payload;
+      })
+      .addCase(resetPasswordRequestAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(resetPasswordRequestAsync.fulfilled, (state, action) => {
+         state.status = "idle";
+         state.mailSent = true
+      }).addCase(resetPasswordAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(resetPasswordAsync.fulfilled, (state, action) => {
+         state.status = "idle";
+          state.passwordReset = true
       });
   },
 });
@@ -145,9 +188,13 @@ export const selectLoggedinUserOrders = (state) =>
   state.auth.LoggedInUser.orders;
 export const selectError = (state) => state.auth.error;
 export const selectuserChecked = (state) => state.auth.userChecked;
-export const selectStatus=(state) => state.auth.status;
-export const selectLoading=(state) => state.auth.loading;
+export const selectStatus = (state) => state.auth.status;
+export const selectLoading = (state) => state.auth.loading;
+export const selectMailSent = (state) => state.auth.mailSent;
+export const selectpasswordReset = (state) => state.auth.passwordReset;
+
 export const { errorhandler } = authSlice.actions;
+export const { mailsent } = authSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

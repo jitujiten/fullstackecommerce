@@ -37,6 +37,7 @@ import AlertTemplate from "react-alert-template-basic";
 import StripeCheckout from "./pages/StripeCheckout";
 import HomePage from "./pages/HomePage";
 import Products from "./pages/Products";
+import ResetPassword from "./features/auth/components/ResetPassword";
 
 const options = {
   timeout: 4000,
@@ -162,6 +163,10 @@ const router = createBrowserRouter([
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
   },
   {
     path: "*",
