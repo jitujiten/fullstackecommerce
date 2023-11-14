@@ -20,8 +20,7 @@ export default function Cart() {
   const [openModal, setopenModal] = useState(null);
   const products = useSelector(selectItems);
   const status = useSelector(selectCartStatus);
-  const cartLoader=useSelector(selectcartLoader)
-
+  const cartLoader = useSelector(selectcartLoader);
 
   const TotalAmount = products.reduce((ammount, item) => {
     return DiscountPrice(item.product) * item.quantity + ammount;
@@ -31,7 +30,7 @@ export default function Cart() {
   }, 0);
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartAsync({ id:item.id, quantity: +e.target.value }));
+    dispatch(updateCartAsync({ id: item.id, quantity: +e.target.value }));
   };
 
   const removeHandler = (id) => {
@@ -40,26 +39,28 @@ export default function Cart() {
 
   return (
     <>
-      {status === "loading" ? (
-        <div className="flex items-center justify-center h-screen">
-          <BallTriangle
-            height={100}
-            width={100}
-            radius={5}
-            color="#600AFF"
-            ariaLabel="ball-triangle-loading"
-            wrapperClass={{}}
-            wrapperStyle=""
-            visible={true}
-          />
-        </div>
-      ) : (
-        <>
-          {!products.length && cartLoader &&  <Navigate to="/" replace={true}></Navigate>}
-          <div className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl font-bold tracking-tight text-cyan-900">
-              Cart
-            </h1>
+      {!products.length && cartLoader && (
+        <Navigate to="/" replace={true}></Navigate>
+      )}
+      <div className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-bold tracking-tight text-cyan-900">
+          Cart
+        </h1>
+        {status === "loading" ? (
+          <div className="flex items-center justify-center h-screen">
+            <BallTriangle
+              height={100}
+              width={100}
+              radius={5}
+              color="#600AFF"
+              ariaLabel="ball-triangle-loading"
+              wrapperClass={{}}
+              wrapperStyle=""
+              visible={true}
+            />
+          </div>
+        ) : (
+          <span>
             <div className="border-t  border-gray-200 px-4 py-6 sm:px-6">
               <div className="flow-root">
                 <ul role="list" className="-my-6 divide-y divide-gray-200">
@@ -77,12 +78,16 @@ export default function Cart() {
                         <div>
                           <div className="flex justify-between text-base font-medium text-gray-900">
                             <h3>
-                              <a href={product.product.id}>{product.product.title}</a>
+                              <a href={product.product.id}>
+                                {product.product.title}
+                              </a>
                               <p className="text-left	 mt-1 text-sm text-gray-500">
                                 {product.product.brand}
                               </p>
                             </h3>
-                            <p className="ml-4">${DiscountPrice(product.product)}</p>
+                            <p className="ml-4">
+                              ${DiscountPrice(product.product)}
+                            </p>
                           </div>
                         </div>
                         <div className="flex flex-1 items-end justify-between text-sm">
@@ -174,9 +179,9 @@ export default function Cart() {
                 </p>
               </div>
             </div>
-          </div>
-        </>
-      )}
+          </span>
+        )}
+      </div>
     </>
   );
 }

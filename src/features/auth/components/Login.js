@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectLoggedinUser, selectError, loginUserAsync } from "../authSlice";
+import { selectLoggedinUser, selectError, loginUserAsync, errorhandler } from "../authSlice";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Login() {
   const dispatch = useDispatch();
-  const error = useSelector(selectError);
+  const Loginerror = useSelector(selectError);
   const user = useSelector(selectLoggedinUser);
 
   const {
@@ -15,6 +16,12 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+
+useEffect(()=>{
+  dispatch(errorhandler)
+},[dispatch])
+
 
   return (
     <>
@@ -106,8 +113,7 @@ export default function Login() {
                 {errors.password && (
                   <p className="text-red-500">{errors?.password.message}</p>
                 )}
-
-                {error && <p className="text-red-500">{error.message}</p>}
+                {Loginerror && <p className="text-red-500">{Loginerror}</p>}
               </div>
             </div>
 

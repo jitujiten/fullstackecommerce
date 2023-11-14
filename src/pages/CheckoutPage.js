@@ -7,14 +7,13 @@ import {
   updateCartAsync,
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
-import { updateUserAsync } from "../features/user/userSlice";
 import {
   addOrderAsync,
   selectcurrentOrderPlaced,
 } from "../features/order/orderSlice";
-import { selectUserInfo } from "../features/user/userSlice";
 import { DiscountPrice } from "../app/constants";
 import Modal from "../features/common/Modal";
+import { selectLoggedinUser, updateUserAsync } from "../features/auth/authSlice";
 import Navbar from "../features/navbar/Navbar";
 
 const CheckoutPage = () => {
@@ -25,13 +24,15 @@ const CheckoutPage = () => {
   const [openModal, setopenModal] = useState(null);
   const orderPlaced = useSelector(selectcurrentOrderPlaced);
   const products = useSelector(selectItems);
-  const user = useSelector(selectUserInfo);
+  const user = useSelector(selectLoggedinUser);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
+
+
 
   const TotalAmount = products.reduce((ammount, item) => {
     return DiscountPrice(item.product) * item.quantity + ammount;
@@ -53,7 +54,6 @@ const CheckoutPage = () => {
   };
 
   const handlePayment = (e) => {
-    console.log(e.target.value);
     setPayMentMethod(e.target.value);
   };
 
@@ -73,6 +73,7 @@ const CheckoutPage = () => {
   };
 
   return (
+    <Navbar>
     <div>
       {!products.length && <Navigate to="/" replace={true}></Navigate>}
 
@@ -325,6 +326,7 @@ const CheckoutPage = () => {
                             type="radio"
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             onChange={handlePayment}
+                            value="cash"
                             checked={payMentMethod === "cash"}
                           />
                           <label
@@ -485,6 +487,7 @@ const CheckoutPage = () => {
         </div>
       </div>
     </div>
+    </Navbar>
   );
 };
 

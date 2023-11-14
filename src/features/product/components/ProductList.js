@@ -66,6 +66,7 @@ export default function ProductList() {
   ];
 
   const handleFilter = (e, section) => {
+    console.log(filter);
     const { value } = e.target;
     let newfilter = { ...filter };
     if (e.target.checked) {
@@ -78,7 +79,6 @@ export default function ProductList() {
       const index = newfilter[section].findIndex((el) => el === value);
       newfilter[section].splice(index, 1);
     }
-    console.log({ newfilter });
     setFilter(newfilter);
   };
 
@@ -106,19 +106,23 @@ export default function ProductList() {
   }, []);
 
   return (
-    <div className="bg-white">
+    <div className="bg-transparent">
       <div>
         <MobileFilter
           handleFilter={handleFilter}
           mobileFiltersOpen={mobileFiltersOpen}
           setMobileFiltersOpen={setMobileFiltersOpen}
           filters={filters}
+          filter={filter}
         />
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
-            <h1 className="text-4xl font-bold tracking-tight text-cyan-900 ">
-              All Products
-            </h1>
+            <button
+              type="button"
+              className="mt-1.5 inline-block bg-gray-900 px-10 py-6 text-xs font-medium uppercase tracking-wide text-white rounded-md hover:scale-125 hover:bg-gray-800 transition delay-150 duration-300 ease-in-out"
+            >
+              Explore All Collection
+            </button>
 
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
@@ -191,7 +195,11 @@ export default function ProductList() {
 
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Filters */}
-              <DesktopFilter handleFilter={handleFilter} filters={filters} />
+              <DesktopFilter
+                handleFilter={handleFilter}
+                filters={filters}
+                filter={filter}
+              />
 
               {/* Product grid */}
               <div className="lg:col-span-3">
@@ -217,6 +225,7 @@ const MobileFilter = ({
   setMobileFiltersOpen,
   handleFilter,
   filters,
+  filter,
 }) => {
   return (
     <div>
@@ -303,7 +312,13 @@ const MobileFilter = ({
                                     name={`${section.id}[]`}
                                     defaultValue={option.value}
                                     type="checkbox"
-                                    defaultChecked={option.checked}
+                                    defaultChecked={
+                                      filter &&
+                                      filter[section.name] &&
+                                      filter[section.name].includes(
+                                        option.label
+                                      )
+                                    }
                                     onChange={(e) =>
                                       handleFilter(e, section.name)
                                     }
@@ -333,7 +348,7 @@ const MobileFilter = ({
   );
 };
 
-const DesktopFilter = ({ handleFilter, filters }) => {
+const DesktopFilter = ({ handleFilter, filters, filter }) => {
   return (
     <form className="hidden lg:block">
       {filters.map((section) => (
@@ -345,7 +360,7 @@ const DesktopFilter = ({ handleFilter, filters }) => {
           {({ open }) => (
             <>
               <h3 className="-my-3 flow-root">
-                <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                <Disclosure.Button className="flex w-full items-center justify-between bg-transparent py-3 text-sm text-gray-400 hover:text-gray-500">
                   <span className="font-medium text-gray-900">
                     {section.name}
                   </span>
@@ -367,7 +382,11 @@ const DesktopFilter = ({ handleFilter, filters }) => {
                         name={`${section.id}[]`}
                         defaultValue={option.value}
                         type="checkbox"
-                        defaultChecked={option.checked}
+                        defaultChecked={
+                          filter &&
+                          filter[section.name] &&
+                          filter[section.name].includes(option.label)
+                        }
                         onChange={(e) => handleFilter(e, section.name)}
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                       />
@@ -406,11 +425,14 @@ const ProductGrid = ({ products, status }) => {
           />
         </div>
       ) : (
-        <div className="bg-white">
+        <div className="bg-transparent">
           <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
+            {products.length === 0 && (
+              <h2 className="text-lg text-gray-600">No Product Found</h2>
+            )}
             <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
               {products?.map((product) => (
-                <Link key={product.id} to={`product-detail/${product.id}`}>
+                <Link key={product.id} to={`/product-detail/${product.id}`}>
                   <div
                     key={product.id}
                     className="group relative p-2 border-solid border-2 border-gray-200 rounded-lg"

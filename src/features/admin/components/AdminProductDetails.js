@@ -7,11 +7,12 @@ import {
   fetchProductByIdAsync,
   selectProductlistStatus,
 } from "../../product/ProductSlice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { addToCartAsync, selectItems } from "../../cart/cartSlice";
 import { DiscountPrice } from "../../../app/constants";
 import { BallTriangle } from "react-loader-spinner";
 import { useAlert } from "react-alert";
+import { selectLoggedinUser } from "../../auth/authSlice";
 
 const colors = [
   { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
@@ -50,6 +51,7 @@ export default function AdminProductDetail() {
   const status = useSelector(selectProductlistStatus);
   const items = useSelector(selectItems);
   const alert = useAlert();
+  const user = useSelector(selectLoggedinUser);
 
   useEffect(() => {
     dispatch(fetchProductByIdAsync(params.id));
@@ -341,14 +343,21 @@ export default function AdminProductDetail() {
                         </div>
                       </RadioGroup>
                     </div>
-
-                    <button
+                    {!user && (
+                      <Link
+                        to="/login"
+                        className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        Login & Add to Cart
+                      </Link>
+                    )}
+                    {user && <button
                       type="submit"
                       className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       onClick={handleCart}
                     >
                       Add to Cart
-                    </button>
+                    </button>}
                   </form>
                 </div>
 

@@ -1,11 +1,13 @@
+import Carosul from "../features/common/Carosul";
 import Footer from "../features/common/Footer";
 import Navbar from "../features/navbar/Navbar";
 import ProductList from "../features/product/components/ProductList";
 
-function Home() {
+function Products() {
   return (
     <div>
       <Navbar>
+        <Carosul/>
         <ProductList></ProductList>
       </Navbar>
       <Footer/>
@@ -13,4 +15,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Products;

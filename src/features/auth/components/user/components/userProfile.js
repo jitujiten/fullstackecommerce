@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectUserInfo, selectUserStatus, updateUserAsync } from "../userSlice";
 import { useForm } from "react-hook-form";
 import { BallTriangle } from "react-loader-spinner";
+import { selectLoggedinUser, selectStatus, updateUserAsync } from "../../../authSlice";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
-  const user = useSelector(selectUserInfo);
+  const user = useSelector(selectLoggedinUser);
   const [selectedEditIndex, setselectedEditIndex] = useState(-1);
   const [showAddressForm, setshowAddressForm] = useState(false);
-  const status=useSelector(selectUserStatus);
+  const status=useSelector(selectStatus);
   
   const {
     register,

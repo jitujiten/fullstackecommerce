@@ -1,8 +1,10 @@
+import UserOrders from "../features/auth/components/user/components/userOrders";
 import Footer from "../features/common/Footer";
 import Navbar from "../features/navbar/Navbar";
-import UserOrders from "../features/user/components/userOrders";
 
 export default function UserOrderPage() {
+  
+
   return (
     <div>
       <Navbar>

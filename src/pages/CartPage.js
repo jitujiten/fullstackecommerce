@@ -2,6 +2,7 @@ import React from "react";
 import Cart from "../features/cart/Cart";
 import Navbar from "../features/navbar/Navbar";
 import Footer from "../features/common/Footer";
+import Protected from "../features/auth/components/Protected";
 
 const CartPage = () => {
   return (
@@ -9,7 +10,7 @@ const CartPage = () => {
       <Navbar>
         <Cart />
       </Navbar>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

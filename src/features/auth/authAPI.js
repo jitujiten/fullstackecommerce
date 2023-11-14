@@ -49,8 +49,47 @@ export function checkAuth() {
   });
 }
 
-export function signOut(userId) {
+export function signOut() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch('/auth/logout');
+      if (response.ok) {
+        resolve({ data:'success' });
+      } else {
+        const error = await response.text();
+        reject(error);
+      }
+    } catch (error) {
+      console.log(error)
+      reject( error );
+    }
+  });
+}
+
+
+
+////////userapi//////////////
+
+
+export function fetchLoggedInUserOrders() {
+  return new Promise(async (resolve) =>{
+  const response= await fetch('/orders/own');
+  const data=await response.json();
+  resolve({data})
+});
+
+}
+
+
+export function updateUser(update) {
   return new Promise(async (resolve) => {
-    resolve({ data: "success" });
+    const response = await fetch("/users/"+update.id, {
+      method: "PATCH",
+      body: JSON.stringify(update),
+      headers: { "content-type": "application/json" },
+    });
+
+    const data = await response.json();
+    resolve({ data });
   });
 }

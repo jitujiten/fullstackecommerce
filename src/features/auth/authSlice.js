@@ -1,11 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUser, loginUser, signOut, checkAuth } from "./authAPI";
+import {
+  createUser,
+  loginUser,
+  signOut,
+  checkAuth,
+  fetchLoggedInUserOrders,
+  updateUser,
+} from "./authAPI";
 
 const initialState = {
-  LoggedInUserToken: null, //this should only contain user identity =>id,role
+  LoggedInUser: null,
   status: "idle",
   error: null,
   userChecked: false,
+  loading: true,
 };
 
 export const createUserAsync = createAsyncThunk(
@@ -42,19 +50,37 @@ export const checkAuthAsync = createAsyncThunk("user/checkAuth", async () => {
   // The value we return becomes the `fulfilled` action payload
 });
 
-export const signOutAsync = createAsyncThunk("user/signOut", async (userId) => {
-  const response = await signOut(userId);
+export const signOutAsync = createAsyncThunk("user/signOut", async () => {
+  const response = await signOut();
   // The value we return becomes the `fulfilled` action payload
   return response.data;
 });
+
+export const fetchLoggedInUserOrdersAsync = createAsyncThunk(
+  "user/fetchLoggedInUserOrders",
+  async () => {
+    const response = await fetchLoggedInUserOrders();
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+
+export const updateUserAsync = createAsyncThunk(
+  "user/updateUser",
+  async (update) => {
+    const response = await updateUser(update);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
 
 export const authSlice = createSlice({
   name: "user",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    errorhandler: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -64,14 +90,14 @@ export const authSlice = createSlice({
       })
       .addCase(createUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.LoggedInUserToken = action.payload;
+        state.LoggedInUser = action.payload;
       })
       .addCase(loginUserAsync.pending, (state) => {
         state.status = "loading";
       })
       .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.LoggedInUserToken = action.payload;
+        state.LoggedInUser = action.payload;
       })
       .addCase(loginUserAsync.rejected, (state, action) => {
         state.status = "rejected";
@@ -82,28 +108,46 @@ export const authSlice = createSlice({
       })
       .addCase(signOutAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.LoggedInUserToken = null;
+        state.LoggedInUser = null;
       })
       .addCase(checkAuthAsync.pending, (state) => {
         state.status = "loading";
       })
       .addCase(checkAuthAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.LoggedInUserToken = action.payload;
+        state.LoggedInUser = action.payload;
         state.userChecked = true;
+        state.loading = false; 
       })
       .addCase(checkAuthAsync.rejected, (state, action) => {
         state.status = "rejected";
-        state.userChecked = true;
+        state.userChecked = false;
+      })
+      .addCase(fetchLoggedInUserOrdersAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchLoggedInUserOrdersAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.LoggedInUser.orders = action.payload;
+      })
+      .addCase(updateUserAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateUserAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.LoggedInUser = action.payload;
       });
   },
 });
 
-export const selectLoggedinUser = (state) => state.auth.LoggedInUserToken;
+export const selectLoggedinUser = (state) => state.auth.LoggedInUser;
+export const selectLoggedinUserOrders = (state) =>
+  state.auth.LoggedInUser.orders;
 export const selectError = (state) => state.auth.error;
 export const selectuserChecked = (state) => state.auth.userChecked;
-
-export const { increment } = authSlice.actions;
+export const selectStatus=(state) => state.auth.status;
+export const selectLoading=(state) => state.auth.loading;
+export const { errorhandler } = authSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

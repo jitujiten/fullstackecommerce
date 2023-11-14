@@ -1,7 +1,6 @@
 import "./App.css";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
-import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
@@ -18,6 +17,7 @@ import { useEffect } from "react";
 import { fetchItemsByUserIdAsync } from "./features/cart/cartSlice";
 import {
   checkAuthAsync,
+  fetchLoggedInUserOrdersAsync,
   selectLoggedinUser,
   selectuserChecked,
 } from "./features/auth/authSlice";
@@ -25,7 +25,6 @@ import PageNotFound from "./pages/404";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import UserOrderPage from "./pages/UserOrderPage";
 import UserProfilePage from "./pages/UserProfilePage";
-import { fetchLoggedInUserAsync } from "./features/user/userSlice";
 import Logout from "./features/auth/components/Logout";
 import ForgotPassword from "./features/auth/components/Forgotpassword";
 import ProtectedAdmin from "./features/auth/components/ProtectedAdmin";
@@ -36,6 +35,8 @@ import AdminOrdersPage from "./pages/AdminOrdersPage";
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import StripeCheckout from "./pages/StripeCheckout";
+import HomePage from "./pages/HomePage";
+import Products from "./pages/Products";
 
 const options = {
   timeout: 4000,
@@ -48,11 +49,15 @@ const options = {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Protected>
-        <Home />
-      </Protected>
-    ),
+    element: <HomePage />,
+  },
+  {
+    path: "/all-products",
+    element: <Products />,
+  },
+  {
+    path: "/product-detail/:id",
+    element: <ProductDetailsPage />,
   },
   {
     path: "/admin",
@@ -83,14 +88,6 @@ const router = createBrowserRouter([
     element: (
       <Protected>
         <CheckoutPage />
-      </Protected>
-    ),
-  },
-  {
-    path: "/product-detail/:id",
-    element: (
-      <Protected>
-        <ProductDetailsPage />
       </Protected>
     ),
   },
@@ -151,7 +148,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/stripe-checkout/",
+    path: "/stripe-checkout/:id",
     element: (
       <Protected>
         <StripeCheckout />
@@ -175,24 +172,17 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedinUser);
-  const userChecked = useSelector(selectuserChecked);
 
   useEffect(() => {
     dispatch(checkAuthAsync());
+    dispatch(fetchLoggedInUserOrdersAsync());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (user) {
-      dispatch(fetchItemsByUserIdAsync());
-      dispatch(fetchLoggedInUserAsync());
-    }
-  }, [dispatch, user]);
 
   return (
     <div className="App">
-        <Provider template={AlertTemplate} {...options}>
-          <RouterProvider router={router} />
-        </Provider>
+      <Provider template={AlertTemplate} {...options}>
+        <RouterProvider router={router} />
+      </Provider>
     </div>
   );
 }
