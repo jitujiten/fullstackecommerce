@@ -81,8 +81,8 @@ const Carosul = () => {
           <button
             key={index}
             onClick={() => setCont(index)}
-            className={`bg-gray-500 rounded-full w-4 p-1 m-3  mt-1 ${
-              cont === index ? "bg-blue-900" : ""
+            className={`bg-gray-200 rounded-full w-4 p-1 m-3  mt-1 ${
+              cont === index ? "bg-gray-800" : ""
             }`}
           ></button>
         ))}

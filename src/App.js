@@ -180,7 +180,6 @@ function App() {
 
   useEffect(() => {
     dispatch(checkAuthAsync());
-    dispatch(fetchLoggedInUserOrdersAsync());
   }, [dispatch]);
 
   return (

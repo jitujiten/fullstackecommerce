@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectLoggedinUser, createUserAsync } from "../authSlice";
+import { selectLoggedinUser, createUserAsync, selectError, selectSignUpError } from "../authSlice";
 import { Link, Navigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 export default function Signup() {
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedinUser);
+  const SignUpError = useSelector(selectSignUpError);
 
   const {
     register,
@@ -136,6 +137,7 @@ export default function Signup() {
                     {errors?.ConfirmPassword.message}
                   </p>
                 )}
+                {SignUpError && <p className="text-red-500">{SignUpError}</p>}
               </div>
             </div>
 

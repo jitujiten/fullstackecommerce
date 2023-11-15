@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { BallTriangle } from "react-loader-spinner";
 import { selectLoggedinUser, selectStatus, updateUserAsync } from "../../../authSlice";
+import { useAlert } from "react-alert";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -10,7 +11,8 @@ export default function UserProfile() {
   const [selectedEditIndex, setselectedEditIndex] = useState(-1);
   const [showAddressForm, setshowAddressForm] = useState(false);
   const status=useSelector(selectStatus);
-  
+  const alert = useAlert();
+
   const {
     register,
     handleSubmit,
@@ -21,14 +23,14 @@ export default function UserProfile() {
   const editHandler = (addressUpdate, index) => {
     const newUser = { ...user, addresses: [...user.addresses] };
     newUser.addresses.splice(index, 1, addressUpdate);
-    dispatch(updateUserAsync(newUser));
+    dispatch(updateUserAsync({user:newUser,alert}));
     setselectedEditIndex(-1);
   };
 
   const removeHandler = (e, index) => {
     const newUser = { ...user, addresses: [...user.addresses] };
     newUser.addresses.splice(index, 1);
-    dispatch(updateUserAsync(newUser));
+    dispatch(updateUserAsync({user:newUser,alert}));
   };
 
   const handleEditForm = (index) => {
@@ -46,7 +48,7 @@ export default function UserProfile() {
   const addAddressForm = (address) => {
     if (address) {
       const newUser = { ...user, addresses: [...user.addresses, address] };
-      dispatch(updateUserAsync(newUser));
+      dispatch(updateUserAsync({user:newUser,alert}));
     }
   };
 

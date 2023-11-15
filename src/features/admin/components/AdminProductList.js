@@ -13,9 +13,7 @@ import {
 } from "../../product/ProductSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  StarIcon,
-} from "@heroicons/react/20/solid";
+import { StarIcon } from "@heroicons/react/20/solid";
 import {
   ChevronDownIcon,
   FunnelIcon,
@@ -98,7 +96,9 @@ export default function AdminProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-    dispatch(fetchProductsByFilterAsync({ filter, sort, pagination,admin:true }));
+    dispatch(
+      fetchProductsByFilterAsync({ filter, sort, pagination, admin: true })
+    );
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
@@ -220,6 +220,7 @@ export default function AdminProductList() {
               </div>
             </div>
           </section>
+
           <Pagination
             handlePage={handlePage}
             page={page}
@@ -494,24 +495,27 @@ const ProductGrid = ({
                       cancelOption="Cancel"
                       showModal={openModal === product.id}
                       cancelAction={(e) => setopenModal(null)}
-           e           dangerAction={(e) => {
+                      e
+                      dangerAction={(e) => {
                         deleteProduct(product);
                         setopenModal(null);
                       }}
                     />
-                    {!product.deleted && <button
-                      onClick={(e) => setopenModal(product.id)}
-                      className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                    >
-                      Delete Product
-                    </button>}
+                    {!product.deleted && (
+                      <button
+                        onClick={(e) => setopenModal(product.id)}
+                        className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                      >
+                        Delete Product
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      )} 
+      )}
     </>
   );
 };

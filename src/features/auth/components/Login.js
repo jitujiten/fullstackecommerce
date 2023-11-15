@@ -11,11 +11,13 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useAlert } from "react-alert";
 
 export default function Login() {
   const dispatch = useDispatch();
   const Loginerror = useSelector(selectError);
   const user = useSelector(selectLoggedinUser);
+  const alert = useAlert();
 
   const {
     register,
@@ -49,10 +51,10 @@ export default function Login() {
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
               dispatch(
-                loginUserAsync({
+                loginUserAsync({loginInfo:{
                   email: data.email,
                   password: data.password,
-                })
+                },alert})
               );
             })}
           >

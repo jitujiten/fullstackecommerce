@@ -1,17 +1,29 @@
 // A mock function to mimic making an async request for data
 export function createUser(userData) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("/auth/signup", {
-      method: "POST",
-      body: JSON.stringify(userData),
-      headers: { "content-type": "application/json" },
-    });
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch("/auth/signup", {
+        method: "POST",
+        body: JSON.stringify(userData),
+        headers: { "Content-Type": "application/json" },
+      });
 
-    const data = await response.json();
-    console.log(userData);
-    resolve({ data });
+      if (!response.ok) {
+        // Handle non-200 status codes here
+        const errorData = await response.json();
+        reject(errorData);
+        return;
+      }
+
+      const data = await response.json();
+      resolve(data);
+    } catch (error) {
+      // Handle other errors like network failure, etc.
+      reject(error);
+    }
   });
 }
+
 
 // A mock function to mimic making an async request for data
 export function loginUser(loginInfo) {

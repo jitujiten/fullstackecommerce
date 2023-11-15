@@ -13,6 +13,7 @@ import { DiscountPrice } from "../../app/constants";
 import { BallTriangle } from "react-loader-spinner";
 import Modal from "../common/Modal";
 import { CurrencyDollarIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useAlert } from "react-alert";
 
 export default function Cart() {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ export default function Cart() {
   const products = useSelector(selectItems);
   const status = useSelector(selectCartStatus);
   const cartLoader = useSelector(selectcartLoader);
+  const alert = useAlert();
 
   const TotalAmount = products.reduce((ammount, item) => {
     return DiscountPrice(item.product) * item.quantity + ammount;
@@ -34,7 +36,7 @@ export default function Cart() {
   };
 
   const removeHandler = (id) => {
-    dispatch(deleteCartItemAsync(id));
+    dispatch(deleteCartItemAsync({id:id,alert}));
   };
 
   return (

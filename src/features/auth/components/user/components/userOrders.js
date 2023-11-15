@@ -34,7 +34,7 @@ function UserOrders() {
         </div>
       ) : (
         <div>
-          {orders.map((order) => {
+          {orders && orders.map((order) => {
             return (
               <div
                 key={order.id}
@@ -46,6 +46,12 @@ function UserOrders() {
                 <h3 className="text-left ml-3 text-xl font-bold tracking-tight text-red-400">
                   Order status :{order.status}
                 </h3>
+                <h3 className="text-left ml-3 text-xl font-bold tracking-tight text-green-700">
+                Date Of Order :{new Date(order.dateOfOrder).toLocaleDateString()}
+                </h3>
+                <p className="text-left ml-3 text-sm font-bold tracking-tight text-green-400">
+                Time Of Order : {new Date(order.dateOfOrder).toLocaleTimeString()}
+                </p>
                 <div className=" border-gray-200 px-4 py-6 sm:px-6">
                   <div className="flow-root">
                     <ul role="list" className="-my-6 divide-y divide-gray-200">

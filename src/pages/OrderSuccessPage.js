@@ -1,20 +1,22 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { fetchLoggedInUserOrdersAsync, selectLoggedinUser } from "../features/auth/authSlice";
+import {
+  fetchLoggedInUserOrdersAsync,
+  selectLoggedinUser,
+} from "../features/auth/authSlice";
 import { resetCartAsync } from "../features/cart/cartSlice";
 import { resetOrder } from "../features/order/orderSlice";
 
 export default function OrderSuccessPage() {
   const params = useParams();
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(fetchLoggedInUserOrdersAsync());
-    dispatch(resetCartAsync())
-    dispatch(resetOrder())
-  },[dispatch])
-
+    dispatch(resetCartAsync());
+    dispatch(resetOrder());
+  }, [dispatch]);
 
   return (
     <>
@@ -30,6 +32,9 @@ export default function OrderSuccessPage() {
             </h1>
             <p className="mt-6 text-base leading-7 text-gray-600">
               You Can Check your order in My Account My Orders
+            </p>
+            <p className="mt-3  text-lg leading-7 text-green-600">
+              A order receipt send to your registered email address
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
