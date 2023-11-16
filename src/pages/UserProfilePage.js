@@ -6,7 +6,7 @@ const UserProfilePage = () => {
   return (
     <>
       <Navbar>
-        <h1 className=" ml-3 text-4xl font-bold tracking-tight text-gray-900">
+        <h1 className=" text-4xl font-extrabold tracking-tight leading-none text-gray-800 font-serif">
           My Profile
         </h1>
         <UserProfile />

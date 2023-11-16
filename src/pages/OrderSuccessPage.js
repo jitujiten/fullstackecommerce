@@ -23,6 +23,11 @@ export default function OrderSuccessPage() {
       {!params.id && <Navigate to="/" replace={true}></Navigate>}
       <div className=" h-screen  bg-white">
         <main className="grid min-h-full place-items-center  px-6 py-24 sm:py-32 lg:px-8">
+          <img
+            src="https://github.com/jitujiten/ecommerceBackend/assets/120164938/5ebaecd4-bea3-4f43-897b-4f31e06867bd"
+            alt="OneStore Logo"
+            className="w-32 h-32 block"
+          />
           <div className="text-center">
             <p className="text-base font-semibold text-indigo-600">
               Order Successfully Placed

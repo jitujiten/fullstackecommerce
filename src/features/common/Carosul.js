@@ -6,7 +6,7 @@ const Carosul = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       switchSlide();
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);

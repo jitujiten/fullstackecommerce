@@ -1,23 +1,33 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectLoggedinUser, createUserAsync, selectError, selectSignUpError } from "../authSlice";
+import {
+  selectLoggedinUser,
+  createUserAsync,
+  selectError,
+  selectSignUpError,
+  fetchLoggedInUserOrdersAsync,
+  errorhandler,
+  selectforgotpasswordspin,
+} from "../authSlice";
 import { Link, Navigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useEffect } from "react";
 
 export default function Signup() {
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedinUser);
   const SignUpError = useSelector(selectSignUpError);
+  const Status = useSelector(selectforgotpasswordspin);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   return (
     <>
-      {" "}
       {user && <Navigate to="/" replace={true}></Navigate>}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -41,10 +51,12 @@ export default function Signup() {
                   email: data.email,
                   password: data.password,
                   addresses: [],
+                  ProfileUrl: null,
+                  name: "User Name",
                   role: "user",
+                  orders: [],
                 })
               );
-              console.log(data);
             })}
           >
             <div>
@@ -146,7 +158,28 @@ export default function Signup() {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign Up
+                {Status ? (
+                  <svg
+                    class="animate-spin h-5 w-5 mr-3 border-b-1 border-white"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A8.004 8.004 0 0112 4.535V0C5.373 0 0 5.373 0 12h4zm2 5.291h4a8.01 8.01 0 01-7.746-5.332L6 17.583z"
+                    ></path>
+                  </svg>
+                ) : (
+                  <span> Sign Up</span>
+                )}
               </button>
             </div>
           </form>

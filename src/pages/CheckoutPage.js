@@ -21,6 +21,7 @@ import {
 import Navbar from "../features/navbar/Navbar";
 import { BallTriangle } from "react-loader-spinner";
 import { useAlert } from "react-alert";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
@@ -54,7 +55,7 @@ const CheckoutPage = () => {
   };
 
   const removeHandler = (id) => {
-    dispatch(deleteCartItemAsync({id:id,alert}));
+    dispatch(deleteCartItemAsync({ id: id, alert }));
   };
 
   const handleAddresses = (e) => {
@@ -78,8 +79,8 @@ const CheckoutPage = () => {
     };
     if (selectAddress) {
       dispatch(addOrderAsync(order));
-    }else{
-      alert.error('select one of the addresses')
+    } else {
+      alert.error("select one of the addresses");
     }
   };
 
@@ -122,10 +123,13 @@ const CheckoutPage = () => {
                   noValidate
                   onSubmit={handleSubmit((data) => {
                     dispatch(
-                      updateUserAsync({user:{
-                        ...user,
-                        addresses: [...user.addresses, data],
-                      },alert})
+                      updateUserAsync({
+                        user: {
+                          ...user,
+                          addresses: [...user.addresses, data],
+                        },
+                        alert,
+                      })
                     );
                     reset();
                   })}
@@ -284,7 +288,7 @@ const CheckoutPage = () => {
                       </button>
                       <button
                         type="submit"
-                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                       >
                         Add Address
                       </button>
@@ -390,7 +394,7 @@ const CheckoutPage = () => {
               </div>
               <div className="lg:col-span-2">
                 <div className="mx-auto rounded-2xl  bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
-                  <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+                  <h1 className="text-4xl font-bold tracking-tight text-gray-900 font-serif  ">
                     Cart
                   </h1>
                   <div className="border-t  border-gray-200 px-4 py-6 sm:px-6">
@@ -420,7 +424,7 @@ const CheckoutPage = () => {
                                       {product.product.brand}
                                     </p>
                                   </h3>
-                                  <p className="ml-4">
+                                  <p className="ml-4 font-serif  text-xl">
                                     ${DiscountPrice(product.product)}
                                   </p>
                                 </div>
@@ -466,10 +470,10 @@ const CheckoutPage = () => {
                                   />
                                   <button
                                     type="button"
-                                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                                    className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                                     onClick={(e) => setopenModal(product.id)}
                                   >
-                                    Remove
+                                    <TrashIcon className="w-5 h-5" />
                                   </button>
                                 </div>
                               </div>
@@ -483,11 +487,11 @@ const CheckoutPage = () => {
                   <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                     <div className="flex justify-between text-base my-2 font-medium text-gray-900">
                       <p>Subtotal</p>
-                      <p>${TotalAmount}</p>
+                      <p className="font-serif  text-xl">${TotalAmount}</p>
                     </div>
                     <div className="flex justify-between text-base my-2 font-medium text-gray-900">
                       <p>Total items in cart</p>
-                      <p>{TotalItems} items</p>
+                      <p className="font-serif  text-xl">{TotalItems} items</p>
                     </div>
                     <p className="mt-0.5 text-sm text-gray-500">
                       Shipping and taxes calculated at checkout.

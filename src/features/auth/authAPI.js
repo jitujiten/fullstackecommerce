@@ -16,7 +16,7 @@ export function createUser(userData) {
       }
 
       const data = await response.json();
-      resolve(data);
+      resolve({data});
     } catch (error) {
       // Handle other errors like network failure, etc.
       reject(error);

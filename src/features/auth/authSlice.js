@@ -20,6 +20,7 @@ const initialState = {
   loading: true,
   mailSent: false,
   passwordReset: false,
+  forgotpasswordspin:false
 };
 
 export const createUserAsync = createAsyncThunk(
@@ -124,26 +125,32 @@ export const authSlice = createSlice({
       .addCase(createUserAsync.pending, (state) => {
         state.status = "loading";
         state.signupError = null;
+        state.forgotpasswordspin=true;
       })
       .addCase(createUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.LoggedInUser = action.payload;
+        state.forgotpasswordspin=false;
       })
       .addCase(createUserAsync.rejected, (state, action) => {
         state.status = "rejected";
         state.signupError = action.payload;
+        state.forgotpasswordspin=false;
       })
       .addCase(loginUserAsync.pending, (state) => {
         state.status = "loading";
         state.error=null;
+        state.forgotpasswordspin=true;
       })
       .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.LoggedInUser = action.payload;
+        state.forgotpasswordspin=false;
       })
       .addCase(loginUserAsync.rejected, (state, action) => {
         state.status = "rejected";
         state.error = action.payload;
+        state.forgotpasswordspin=false;
       })
       .addCase(signOutAsync.pending, (state) => {
         state.status = "loading";
@@ -181,17 +188,22 @@ export const authSlice = createSlice({
       })
       .addCase(resetPasswordRequestAsync.pending, (state) => {
         state.status = "loading";
+        state.mailSent=false;
+        state.forgotpasswordspin=true;
       })
       .addCase(resetPasswordRequestAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.mailSent = true;
+        state.forgotpasswordspin=false;
       })
       .addCase(resetPasswordAsync.pending, (state) => {
         state.status = "loading";
+        state.forgotpasswordspin=true;
       })
       .addCase(resetPasswordAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.passwordReset = true;
+        state.forgotpasswordspin=false;
       });
   },
 });
@@ -207,6 +219,7 @@ export const selectStatus = (state) => state.auth.status;
 export const selectLoading = (state) => state.auth.loading;
 export const selectMailSent = (state) => state.auth.mailSent;
 export const selectpasswordReset = (state) => state.auth.passwordReset;
+export const selectforgotpasswordspin = (state) => state.auth.forgotpasswordspin;
 
 export const { errorhandler } = authSlice.actions;
 export const { mailsent } = authSlice.actions;

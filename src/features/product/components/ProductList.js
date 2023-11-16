@@ -29,6 +29,7 @@ import { Link, renderMatches } from "react-router-dom";
 import { DiscountPrice, ITEMS_PER_PAGE } from "../../../app/constants";
 import { Pagination } from "../../common/Pagination";
 import { BallTriangle } from "react-loader-spinner";
+import Rating from "../../common/Rating";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -119,7 +120,7 @@ export default function ProductList() {
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
             <button
               type="button"
-              className="mt-1.5 inline-block bg-gray-900 px-10 py-6 text-xs font-medium uppercase tracking-wide text-white rounded-md hover:scale-125 hover:bg-gray-800 transition delay-150 duration-300 ease-in-out"
+              className="mt-1.5 inline-block bg-gray-900 px-3 py-3 md:px-10  md:py-6  text-xs font-medium uppercase tracking-wide text-white rounded-md hover:scale-125 hover:bg-gray-800 transition delay-150 duration-300 ease-in-out"
             >
               Explore All Collection
             </button>
@@ -449,9 +450,9 @@ const ProductGrid = ({ products, status }) => {
                         <h3 className="text-sm min-w-1/2 whitespace-nowrap overflow-hidden text-gray-900 text-ellipsis text-left">
                           {product.title}
                         </h3>
-                        <p className="mt-2 text-sm flex items-start	gap-1 text-gray-500">
-                          <StarIcon className="w-6 h-6 inline" />
-                          <span className=" mt-1">{product.rating}</span>
+                        <p >
+                          <Rating rating={product.rating} />
+                         
                         </p>
                       </div>
                       <div className=" flex flex-col">

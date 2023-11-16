@@ -10,13 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchItemsByUserIdAsync, selectItems } from "../cart/cartSlice";
 import { useAlert } from "react-alert";
 import { checkAuthAsync, selectLoggedinUser } from "../auth/authSlice";
-
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -34,10 +28,9 @@ export default function Navbar({ children }) {
     }
   };
 
-
   useEffect(() => {
-      dispatch(fetchItemsByUserIdAsync());
-      dispatch(checkAuthAsync());
+    dispatch(fetchItemsByUserIdAsync());
+    dispatch(checkAuthAsync());
   }, [dispatch]);
 
   return (
@@ -100,7 +93,7 @@ export default function Navbar({ children }) {
                             className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                           >
                             <ShoppingCartIcon
-                              className="h-6 w-6"
+                              className="h-6 w-6 "
                               aria-hidden="true"
                             />
                           </button>
@@ -118,11 +111,19 @@ export default function Navbar({ children }) {
                           <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="absolute -inset-1.5" />
                             <span className="sr-only">Open user menu</span>
-                            <img
-                              className="h-8 w-8 rounded-full"
-                              src={user.imageUrl}
-                              alt=""
-                            />
+                            {Mainuser && Mainuser?.ProfileUrl && (
+                              <img
+                                className="h-8 w-8 rounded-full"
+                                src={Mainuser?.ProfileUrl}
+                                alt=""
+                              />
+                            )}
+                            {!Mainuser?.ProfileUrl && (
+                              <UserCircleIcon
+                                className="h-12 w-12 text-gray-300"
+                                aria-hidden="true"
+                              />
+                            )}
                           </Menu.Button>
                         </div>
                         <Transition
@@ -182,7 +183,7 @@ export default function Navbar({ children }) {
                           className="relative mt-3 -mr-1 ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                         >
                           <ShoppingCartIcon
-                            className="h-6 w-6"
+                            className="h-6 w-6  "
                             aria-hidden="true"
                           />
                         </button>
@@ -243,20 +244,27 @@ export default function Navbar({ children }) {
                 <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex justify-center	  px-6">
                     <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
-                      />
+                      {Mainuser && Mainuser?.ProfileUrl && (
+                        <img
+                          className="h-10 w-10 rounded-full"
+                          src={Mainuser?.ProfileUrl}
+                          alt=""
+                        />
+                      )}
+                      {!Mainuser?.ProfileUrl && (
+                        <UserCircleIcon
+                          className="h-12 w-12 text-gray-300"
+                          aria-hidden="true"
+                        />
+                      )}
                     </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">
-                        {user.name}
+                    {Mainuser && (
+                      <div className="ml-3 mt-3">
+                        <div className="text-sm font-medium leading-none text-gray-400">
+                          {Mainuser?.email}
+                        </div>
                       </div>
-                      <div className="text-sm font-medium leading-none text-gray-400">
-                        {user.email}
-                      </div>
-                    </div>
+                    )}
                   </div>
                   <div className="mt-3 space-y-1 px-2">
                     {!Mainuser && (

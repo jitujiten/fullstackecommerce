@@ -2,16 +2,26 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { BallTriangle } from "react-loader-spinner";
-import { selectLoggedinUser, selectStatus, updateUserAsync } from "../../../authSlice";
+import {
+  selectLoggedinUser,
+  selectStatus,
+  updateUserAsync,
+} from "../../../authSlice";
 import { useAlert } from "react-alert";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedinUser);
   const [selectedEditIndex, setselectedEditIndex] = useState(-1);
   const [showAddressForm, setshowAddressForm] = useState(false);
-  const status=useSelector(selectStatus);
+  const status = useSelector(selectStatus);
   const alert = useAlert();
+  const [edit, setEdit] = useState(false);
+  const [fileData, setFileData] = useState(null);
+  const [userName, setName] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const {
     register,
@@ -23,14 +33,14 @@ export default function UserProfile() {
   const editHandler = (addressUpdate, index) => {
     const newUser = { ...user, addresses: [...user.addresses] };
     newUser.addresses.splice(index, 1, addressUpdate);
-    dispatch(updateUserAsync({user:newUser,alert}));
+    dispatch(updateUserAsync({ user: newUser, alert }));
     setselectedEditIndex(-1);
   };
 
   const removeHandler = (e, index) => {
     const newUser = { ...user, addresses: [...user.addresses] };
     newUser.addresses.splice(index, 1);
-    dispatch(updateUserAsync({user:newUser,alert}));
+    dispatch(updateUserAsync({ user: newUser, alert }));
   };
 
   const handleEditForm = (index) => {
@@ -48,7 +58,58 @@ export default function UserProfile() {
   const addAddressForm = (address) => {
     if (address) {
       const newUser = { ...user, addresses: [...user.addresses, address] };
-      dispatch(updateUserAsync({user:newUser,alert}));
+      dispatch(updateUserAsync({ user: newUser, alert }));
+    }
+    setselectedEditIndex(-1);
+    setshowAddressForm(false);
+  };
+
+  async function ConvertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+
+      fileReader.readAsDataURL(file);
+    });
+  }
+
+  const handleEditClick = () => {
+    setEdit(!edit);
+    setName(user?.name || "");
+    setSelectedFile(user?.UserProfile || null);
+  };
+
+  const FormchangeHandler = (e) => {
+    const { id, files, value } = e.target;
+    if (id === "fileInput") {
+      const file = files[0];
+      setSelectedFile(file);
+      ConvertToBase64(file)
+        .then((url) => {
+          setFileData(url);
+        })
+        .catch((error) => {
+          alert.error("Error occurred while converting to base64");
+        });
+    } else if (id === "name") {
+      setName(value);
+    }
+  };
+
+  const SubmitHandler = (e) => {
+    e.preventDefault();
+    if (fileData && userName) {
+      const newUser = { ...user, name: userName, ProfileUrl: fileData };
+      dispatch(updateUserAsync({ user: newUser, alert }));
+    } else {
+      alert.error("profile image or name output missing ..Try again");
     }
   };
 
@@ -69,17 +130,112 @@ export default function UserProfile() {
         </div>
       ) : (
         <div className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-left ml-3 text-4xl font-bold tracking-tight text-gray-900">
-            Name:{user?.name ? user.name : "New User"}
-          </h1>
-          <h3 className="text-left ml-3 m-2 text-xl font-bold tracking-tight text-red-400">
-            Email address:{user?.email}
-          </h3>
-          {user?.role === "admin" && (
-            <h3 className="text-left ml-3 m-2 text-xl font-bold tracking-tight text-blue-400">
-              role:{user?.role}
-            </h3>
-          )}
+          <div className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-x-10 lg:grid-cols-8 p-10">
+              <div className="lg:col-span-4">
+                {user?.ProfileUrl && (
+                  <img
+                    src={user?.ProfileUrl}
+                    alt="ProfilePic"
+                    className="w-64 h-64 block rounded-full"
+                  />
+                )}
+                {!user?.ProfileUrl && (
+                  <UserCircleIcon
+                    className="w-64 h-64 text-gray-300"
+                    aria-hidden="true"
+                  />
+                )}
+                <h1 className="text-left mt-4 text-4xl font-extrabold tracking-tight leading-none text-gray-800 font-serif">
+                  Name:{user?.name ? user.name : "New User"}
+                </h1>
+                <h1 className="text-left mt-4 text-lg md:text-2xl font-normal  md:font-extrabold  tracking-tight leading-none text-red-600 font-serif ">
+                  Email address:{user?.email}
+                </h1>
+                {user?.role === "admin" && (
+                  <h3 className="text-left mt-4 text-xl font-extrabold tracking-tight leading-none text-blue-600 font-serif">
+                    role:{user?.role}
+                  </h3>
+                )}
+              </div>
+              <div className="lg:col-span-4  text-right">
+                <div className="flex justify-end">
+                  <span onClick={handleEditClick}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-7 h-7 text-blue-800 cursor-pointer sm:mt-5 md:mt-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                      />
+                    </svg>
+                  </span>
+                </div>
+
+                <div>
+                  {edit && (
+                    <form onSubmit={SubmitHandler}>
+                      <label
+                        htmlFor="photo"
+                        className="text-left block text-sm font-medium leading-6 text-gray-900  font-mono"
+                      >
+                        Upload Profile Picture
+                      </label>
+                      <div className="mt-2 flex items-center gap-x-3">
+                        <UserCircleIcon
+                          className="h-12 w-12 text-gray-300"
+                          aria-hidden="true"
+                        />
+                        <label
+                          htmlFor="fileInput"
+                          className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer"
+                        >
+                          Change
+                        </label>
+                        <input
+                          id="fileInput"
+                          type="file"
+                          className="invisible w-0 h-0"
+                          onChange={FormchangeHandler}
+                        />
+                      </div>
+                      {selectedFile && (
+                        <p className="text-left mt-2 text-sm text-gray-500">
+                          Selected file: {selectedFile.name}
+                        </p>
+                      )}
+                      <div className=" flex flex-col text-left">
+                        <label htmlFor="name" className="mt-5 font-mono">
+                          Enter Your Name
+                        </label>
+                        <input
+                          id="name"
+                          type="text"
+                          value={userName}
+                          className="mt-5 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          onChange={FormchangeHandler}
+                        />
+                      </div>
+                      <div className="mt-5 text-left">
+                        <button
+                          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                          type="submit"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
             <div className="flex justify-start mt-5 mb-6">
@@ -466,23 +622,34 @@ export default function UserProfile() {
                       </p>
                     </div>
                     <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-center">
-                      <button
-                        type="button"
-                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                      <span
                         onClick={(e) => {
                           handleEditForm(index);
                         }}
                       >
-                        Edit
-                      </button>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-7 h-7 text-blue-800 cursor-pointer "
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                          />
+                        </svg>
+                      </span>
                       <button
                         type="button"
-                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                        className="mt-2"
                         onClick={(e) => {
                           removeHandler(e, index);
                         }}
                       >
-                        Remove
+                        <TrashIcon className="w-6 h-6 text-red-600 " />
                       </button>
                     </div>
                   </div>

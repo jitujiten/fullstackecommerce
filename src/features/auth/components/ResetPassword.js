@@ -1,12 +1,18 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
-import { resetPasswordAsync, selectpasswordReset } from "../authSlice";
+import {
+  resetPasswordAsync,
+  selectforgotpasswordspin,
+  selectpasswordReset,
+} from "../authSlice";
 import PageNotFound from "../../../pages/404";
 
 export default function ResetPassword() {
   const dispatch = useDispatch();
   const passwordReset = useSelector(selectpasswordReset);
+  const Status = useSelector(selectforgotpasswordspin);
+
   const {
     register,
     handleSubmit,
@@ -110,14 +116,35 @@ export default function ResetPassword() {
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Set Password
+                  {Status ? (
+                    <svg
+                      class="animate-spin h-5 w-5 mr-3 border-b-1 border-white"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      ></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A8.004 8.004 0 0112 4.535V0C5.373 0 0 5.373 0 12h4zm2 5.291h4a8.01 8.01 0 01-7.746-5.332L6 17.583z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    <span> Set Password</span>
+                  )}
                 </button>
               </div>
             </form>
           </div>
         </div>
       ) : (
-       <PageNotFound/>
+        <PageNotFound />
       )}
     </>
   );

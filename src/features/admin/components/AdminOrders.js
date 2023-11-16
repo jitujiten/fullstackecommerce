@@ -88,14 +88,17 @@ const AdminOrders = () => {
                           })
                         }
                       >
-                        Order#{" "}
+                        Order# {"  "}
                         {sort._order === "desc" ? (
-                          <ArrowDownIcon className="w-4 h-4 inline" />
+                          <ArrowDownIcon className="w-4 h-4 block ml-4" />
                         ) : (
                           <ArrowUpIcon className="w-4 h-4 inline" />
                         )}
                       </th>
-                      <th className="py-3 px-6 text-left">Items</th>
+                      <th className=" py-3 px-6 text-left -mt-4">
+                        Items{" "}
+                        <ArrowDownIcon className="w-4 h-4 block ml-4 invisible" />
+                      </th>
                       <th
                         className="py-3 px-6 text-center"
                         onClick={(e) =>
@@ -113,7 +116,7 @@ const AdminOrders = () => {
                         )}
                       </th>
                       <th className="py-3 px-6 text-center">
-                        Shipping Address
+                        Shipping Address<ArrowDownIcon className="w-4 h-4 block ml-4 invisible" />
                       </th>
                       <th
                         className="py-3 px-6 text-center"
@@ -131,8 +134,14 @@ const AdminOrders = () => {
                           <ArrowUpIcon className="w-4 h-4 inline" />
                         )}
                       </th>
-                      <th className="py-3 px-6 text-center">Status</th>
-                      <th className="py-3 px-6 text-center">Actions</th>
+                      <th className="py-3 px-6 text-center">
+                        Status
+                        <ArrowDownIcon className="w-4 h-4 block ml-4 invisible" />
+                      </th>
+                      <th className="py-3 px-6 text-center">
+                        Actions
+                        <ArrowDownIcon className="w-4 h-4 block ml-4 invisible" />
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="text-gray-600 text-sm font-light">
@@ -144,7 +153,7 @@ const AdminOrders = () => {
                         >
                           <td className="py-2 px-2 text-left whitespace-nowrap">
                             <div className="flex items-center">
-                              <h1 className="font-abhaya-libre text-cyan-900 font-bold leading-none">
+                              <h1 className="font-abhaya-libre text-cyan-900 font-bold leading-none ">
                                 {order.id}
                               </h1>
                             </div>
@@ -165,14 +174,14 @@ const AdminOrders = () => {
                                   </div>
                                 </div>
                                 <span>
-                                  <h1 className="text-cyan-900 font-bold text-md">
+                                  <h1 className="text-cyan-900 font-bold text-md font-serif text-lg">
                                     {item.product.title}
                                   </h1>
                                   <h1 className="text-cyan-900 font-bold text-md">
-                                    <span className="bg-white-300">Qty:</span>{" "}
+                                    <span className="bg-white-300 font-serif text-lg">Qty:</span>{" "}
                                     {item.quantity}
                                   </h1>
-                                  <h1 className="text-black-900 font-bold text-md">
+                                  <h1 className="text-black-900 font-bold text-md font-serif text-lg">
                                     $ {DiscountPrice(item.product)}
                                   </h1>
                                 </span>
@@ -180,29 +189,29 @@ const AdminOrders = () => {
                             ))}
                           </td>
                           <td className="py-3 px-6 text-center">
-                            <div className="text-xl xl:text-10xl font-abhaya-libre text-black-900  font-extrabold leading-none">
+                            <div className="font-abhaya-libre text-black-900  font-extrabold leading-none font-serif text-3xl">
                               ${order.totalAmount}
                             </div>
                           </td>
                           <td className="py-3 px-6 text-center">
                             <div>
                               <div>
-                                <strong>{order.selectAddress.name}</strong>
+                                <strong className="font-serif text-lg text-gray-700">{order.selectAddress.name}</strong>
                               </div>
-                              <div>{order.selectAddress.city}</div>
-                              <div>{order.selectAddress.street}</div>
-                              <div>{order.selectAddress.state}</div>
-                              <div>{order.selectAddress.pinCode}</div>
+                              <div className="font-serif text-sm text-gray-700">{order.selectAddress.city}</div>
+                              <div className="font-serif text-sm text-gray-700">{order.selectAddress.street}</div>
+                              <div className="font-serif text-sm text-gray-700">{order.selectAddress.state}</div>
+                              <div className="font-serif text-sm text-gray-700">{order.selectAddress.pinCode}</div>
                             </div>
                           </td>
                           <td className="py-3 px-6 text-center">
                             <div>
                               <div>
-                                <strong>
+                                <strong className="font-serif text-sm text-green-700">
                                   {new Date(order.dateOfOrder).toDateString()}
                                 </strong>
                                 <br />
-                                <strong>
+                                <strong className=" text-green-700">
                                   {new Date(
                                     order.dateOfOrder
                                   ).toLocaleTimeString()}

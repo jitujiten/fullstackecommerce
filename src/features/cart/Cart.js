@@ -12,7 +12,7 @@ import { Link, Navigate } from "react-router-dom";
 import { DiscountPrice } from "../../app/constants";
 import { BallTriangle } from "react-loader-spinner";
 import Modal from "../common/Modal";
-import { CurrencyDollarIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {  TrashIcon } from "@heroicons/react/24/outline";
 import { useAlert } from "react-alert";
 
 export default function Cart() {
@@ -45,7 +45,7 @@ export default function Cart() {
         <Navigate to="/" replace={true}></Navigate>
       )}
       <div className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold tracking-tight text-cyan-900">
+        <h1 className="text-4xl font-bold tracking-tight text-cyan-900 font-serif">
           Cart
         </h1>
         {status === "loading" ? (
@@ -87,7 +87,7 @@ export default function Cart() {
                                 {product.product.brand}
                               </p>
                             </h3>
-                            <p className="ml-4">
+                            <p className="ml-4 font-serif  text-xl">
                               ${DiscountPrice(product.product)}
                             </p>
                           </div>
@@ -148,11 +148,11 @@ export default function Cart() {
             <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
               <div className="flex justify-between text-base my-2 font-medium text-gray-900">
                 <p>Subtotal</p>
-                <p>$ {TotalAmount}</p>
+                <p className="font-serif  text-xl">$ {TotalAmount}</p>
               </div>
               <div className="flex justify-between text-base my-2 font-medium text-gray-900">
                 <p>Total items in cart</p>
-                <p>{TotalItems} items</p>
+                <p className="font-serif  text-xl">{TotalItems} items</p>
               </div>
               <p className="mt-0.5 text-sm text-gray-500">
                 Shipping and taxes calculated at checkout.
@@ -160,7 +160,7 @@ export default function Cart() {
               <div className="mt-6">
                 <Link
                   to="/checkout"
-                  className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                  className="flex items-center justify-center rounded-md border border-transparent bg-indigo-500 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-400"
                 >
                   Checkout
                 </Link>
@@ -171,7 +171,7 @@ export default function Cart() {
                   <Link to="/">
                     <button
                       type="button"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                      className="font-medium text-indigo-500 hover:text-indigo-500"
                       onClick={() => setOpen(false)}
                     >
                       Continue Shopping

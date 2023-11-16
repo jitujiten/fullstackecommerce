@@ -176,7 +176,6 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch = useDispatch();
-  const user = useSelector(selectLoggedinUser);
 
   useEffect(() => {
     dispatch(checkAuthAsync());
