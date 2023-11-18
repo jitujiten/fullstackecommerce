@@ -60,6 +60,15 @@ const CheckoutPage = () => {
 
   const handleAddresses = (e) => {
     setselectAddress(user.addresses[e.target.value]);
+    console.log(e.target.value)
+  };
+
+  const handleAddressClick = (index) => {
+    const inputElement = document.querySelector(`input[value="${index}"]`);
+    if (inputElement) {
+      inputElement.checked = true;
+       setselectAddress(user.addresses[index]);
+    }
   };
 
   const handlePayment = (e) => {
@@ -308,6 +317,7 @@ const CheckoutPage = () => {
                             <li
                               key={index}
                               className="flex justify-between gap-x-6  px-3 py-4 m-2 border border-2 rounded-lg border-black-600"
+                              onClick={() => handleAddressClick(index)}
                             >
                               <div className="flex min-w-0 gap-x-4">
                                 <input

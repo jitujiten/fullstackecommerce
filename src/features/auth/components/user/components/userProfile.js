@@ -132,7 +132,7 @@ export default function UserProfile() {
         <div className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 gap-x-10 lg:grid-cols-8 p-10">
-              <div className="lg:col-span-4">
+              <div className="lg:col-span-4 ">
                 {user?.ProfileUrl && (
                   <img
                     src={user?.ProfileUrl}
@@ -158,8 +158,8 @@ export default function UserProfile() {
                   </h3>
                 )}
               </div>
-              <div className="lg:col-span-4  text-right">
-                <div className="flex justify-end">
+              <div className="lg:col-span-4   text-right ">
+                <div className="flex justify-end -mr-3 mt-1">
                   <span onClick={handleEditClick}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

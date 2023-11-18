@@ -62,7 +62,7 @@ const Carosul = () => {
         {slides.map((slide, index) => (
           <div
             key={index}
-            className={`bg-cover rounded-lg bg-center h-auto text-white py-24 px-10 object-fill ${
+            className={`bg-cover md:rounded-lg bg-center h-auto text-white py-24 px-10 object-fill ${
               cont === index ? "block" : "hidden"
             }`}
             style={{ backgroundImage: `url(${slide.image})` }}

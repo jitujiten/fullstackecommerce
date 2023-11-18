@@ -145,11 +145,13 @@ export const authSlice = createSlice({
       .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.LoggedInUser = action.payload;
+       
         state.forgotpasswordspin=false;
       })
       .addCase(loginUserAsync.rejected, (state, action) => {
         state.status = "rejected";
         state.error = action.payload;
+
         state.forgotpasswordspin=false;
       })
       .addCase(signOutAsync.pending, (state) => {
@@ -158,6 +160,7 @@ export const authSlice = createSlice({
       .addCase(signOutAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.LoggedInUser = null;
+        state.orders=null;
       })
       .addCase(checkAuthAsync.pending, (state) => {
         state.status = "loading";
@@ -165,6 +168,8 @@ export const authSlice = createSlice({
       .addCase(checkAuthAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.LoggedInUser = action.payload;
+       
+       
         state.userChecked = true;
         state.loading = false;
       })

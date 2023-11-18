@@ -39,9 +39,9 @@ function UserOrders() {
               return (
                 <div
                   key={order.id}
-                  className="mx-auto rounded-2xl mt-5	py-3	 bg-white max-w-7xl px-4 sm:px-6 lg:px-8"
+                  className="mx-auto rounded-2xl mt-5	py-3 bg-white max-w-7xl px-4 sm:px-6 lg:px-8"
                 >
-                  <h1 className="text-left mt-4 text-4xl font-extrabold tracking-tight leading-none text-gray-800 font-serif">
+                  <h1 className="text-left mt-4 text-xl md:text-4xl font-extrabold tracking-tight leading-none text-gray-800 font-serif">
                     Order #{order.id}
                   </h1>
                   <h1 className="text-left mt-1 text-lg md:text-2xl font-normal  md:font-extrabold  tracking-tight leading-none text-red-600 font-serif ">
