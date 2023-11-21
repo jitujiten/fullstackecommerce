@@ -5,7 +5,7 @@ import {
   ShoppingCartIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchItemsByUserIdAsync, selectItems } from "../cart/cartSlice";
 import { useAlert } from "react-alert";
@@ -21,6 +21,7 @@ export default function Navbar({ children }) {
   const Mainuser = useSelector(selectLoggedinUser);
   const alert = useAlert();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const Carthandler = () => {
     if (!items.length) {
@@ -55,20 +56,32 @@ export default function Navbar({ children }) {
                       <div className="ml-10 flex items-baseline space-x-4">
                         <Link
                           to="/"
-                          className="rounded-md px-3 py-2 text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 hover:text-gray-300"
+                          className={`rounded-md px-3 py-2 text-sm font-medium  text-white  ${
+                            location.pathname === "/"
+                              ? "active bg-gray-900"
+                              : "hover:bg-gray-700 hover:text-gray-300"
+                          }`}
                         >
                           Home
                         </Link>
                         <Link
                           to="/all-products"
-                          className="rounded-md px-3 py-2 text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 hover:text-gray-300"
+                          className={`rounded-md px-3 py-2 text-sm font-medium  text-white  ${
+                            location.pathname === "/all-products"
+                              ? "active bg-gray-900"
+                              : "hover:bg-gray-700 hover:text-gray-300"
+                          }`}
                         >
                           Products
                         </Link>
                         {Mainuser?.role === "admin" && (
                           <Link
                             to="/admin"
-                            className="rounded-md px-3 py-2 text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 hover:text-gray-300"
+                            className={`rounded-md px-3 py-2 text-sm font-medium  text-white  ${
+                              location.pathname === "/admin"
+                                ? "active bg-gray-900"
+                                : "hover:bg-gray-700 hover:text-gray-300"
+                            }`}
                           >
                             Admin
                           </Link>
@@ -76,7 +89,11 @@ export default function Navbar({ children }) {
                         {Mainuser?.role === "admin" && (
                           <Link
                             to="/admin/orders"
-                            className="rounded-md px-3 py-2 text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 hover:text-gray-300"
+                            className={`rounded-md px-3 py-2 text-sm font-medium  text-white  ${
+                              location.pathname === "/admin/orders"
+                                ? "active bg-gray-900"
+                                : "hover:bg-gray-700 hover:text-gray-300"
+                            }`}
                           >
                             Orders
                           </Link>

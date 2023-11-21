@@ -8,16 +8,20 @@ import {
   fetchLoggedInUserOrdersAsync,
   errorhandler,
   selectforgotpasswordspin,
+  signUperrorhandler,
 } from "../authSlice";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect } from "react";
+import { useAlert } from "react-alert";
 
 export default function Signup() {
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedinUser);
   const SignUpError = useSelector(selectSignUpError);
   const Status = useSelector(selectforgotpasswordspin);
+  const navigate = useNavigate();
+  const alert = useAlert();
 
   const {
     register,
@@ -25,6 +29,20 @@ export default function Signup() {
     formState: { errors },
     reset,
   } = useForm();
+
+  useEffect(() => {
+    if (SignUpError === "Email already in use") {
+      setTimeout(() => {
+        return (
+          <>
+            {alert.info("Redirect to LogIn")}
+            {dispatch(signUperrorhandler())}
+            {navigate("/login", { replace: true })};
+          </>
+        );
+      }, 1000);
+    }
+  }, [SignUpError]);
 
   return (
     <>

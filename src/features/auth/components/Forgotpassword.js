@@ -3,22 +3,34 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  mailsent,
   resetPasswordRequestAsync,
   selectMailSent,
   selectStatus,
   selectforgotpasswordspin,
 } from "../authSlice";
+import { useEffect } from "react";
 
 export default function ForgotPassword() {
   const dispatch = useDispatch();
-  const mailsent = useSelector(selectMailSent);
+  const mailsentis = useSelector(selectMailSent);
   const Status = useSelector(selectforgotpasswordspin);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
+
+  useEffect(() => {
+    if (mailsentis) {
+      setTimeout(() => {
+        dispatch(mailsent());
+        reset();
+      }, 3000);
+    }
+  }, [mailsentis]);
 
   return (
     <>
@@ -66,7 +78,7 @@ export default function ForgotPassword() {
                   <p className="text-red-500">{errors?.email?.message}</p>
                 )}
 
-                {mailsent && (
+                {mailsentis && (
                   <p className="text-green-500">Mail sent successfully</p>
                 )}
               </div>

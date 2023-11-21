@@ -94,6 +94,7 @@ export default function UserProfile() {
       ConvertToBase64(file)
         .then((url) => {
           setFileData(url);
+          alert.success("file uploaded successfully press save button to apply");
         })
         .catch((error) => {
           alert.error("Error occurred while converting to base64");
@@ -203,6 +204,7 @@ export default function UserProfile() {
                           type="file"
                           className="invisible w-0 h-0"
                           onChange={FormchangeHandler}
+                          accept="image/*"
                         />
                       </div>
                       {selectedFile && (
