@@ -25,10 +25,16 @@
 
 ＝＞For form handle  use 𝗥𝗲𝗮𝗰𝘁-𝗳𝗼𝗿𝗺-𝗵𝗼𝗼𝗸
 
+# live 
+
+https://ecommerce-backend-five-ruby.vercel.app/
 
 
 # HomePage
 
+![Alt text](image-7.png)
+
+![Alt text](image-8.png)
 
 https://github.com/jitukumarsahu/tempconverter/assets/114562182/a24c9e0b-984f-4384-a4ec-e7c1d5d39ddc
 
@@ -70,6 +76,9 @@ https://github.com/jitukumarsahu/tempconverter/assets/114562182/d9bcb817-bebd-43
 
 ![Alt text](image-2.png)
 
+# order successfully placed mail
+
+![Alt text](image-6.png)
 
 # card payment by stripe
 
