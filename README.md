@@ -61,4 +61,23 @@ https://github.com/jitukumarsahu/tempconverter/assets/114562182/8ac0394c-4195-4d
 https://github.com/jitukumarsahu/tempconverter/assets/114562182/c2684bea-30d8-4e68-8d9a-06c1fcf90491
 
 
+# checkout page & place order
 
+https://github.com/jitukumarsahu/tempconverter/assets/114562182/d9bcb817-bebd-4304-a32d-3f112acf1d2d
+
+
+# order successfull page
+
+![Alt text](image-2.png)
+
+
+# card payment by stripe
+
+![Alt text](image-3.png)
+
+# admin page
+![Alt text](image-4.png)
+
+# admin ordercontrol page
+
+![Alt text](image-5.png)
