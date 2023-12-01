@@ -33,8 +33,32 @@
 https://github.com/jitukumarsahu/tempconverter/assets/114562182/a24c9e0b-984f-4384-a4ec-e7c1d5d39ddc
 
 
+# productPage
+
+https://github.com/jitukumarsahu/tempconverter/assets/114562182/4e3e8abc-aedd-4fb7-a8a6-55530161a272
+
+# productDetailsPage
+
+https://github.com/jitukumarsahu/tempconverter/assets/114562182/02c6a1a7-519e-4e97-b8c7-36435234cc21
 
 
+# login Signup page
+![Alt text](image.png)
+
+![Alt text](image-1.png)
+
+
+# redirect to signup page when user not found
+
+
+https://github.com/jitukumarsahu/tempconverter/assets/114562182/8ac0394c-4195-4d77-8f18-e16354b2c8c1
+
+
+
+
+# redirect to login page when user already exist
+
+https://github.com/jitukumarsahu/tempconverter/assets/114562182/c2684bea-30d8-4e68-8d9a-06c1fcf90491
 
 
 
